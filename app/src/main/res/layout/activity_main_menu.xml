@@ -98,7 +98,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/SignInButton"
         android:layout_width="406dp"
         android:layout_height="55dp"
         android:backgroundTint="#00FFFFFF"
