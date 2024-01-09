@@ -1,7 +1,6 @@
 package com.mpladellorens.delivaryapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
 public class MainMenu extends AppCompatActivity {

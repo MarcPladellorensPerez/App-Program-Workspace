@@ -8,18 +8,9 @@
     tools:context=".MainMenu">
 
     <TextView
-        android:id="@+id/textView25"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Desserts"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="212dp"
-        tools:layout_editor_absoluteY="276dp" />
-
-    <TextView
         android:id="@+id/textView8"
-        android:layout_width="0dp"
-        android:layout_height="65dp"
+        android:layout_width="441dp"
+        android:layout_height="96dp"
         android:background="#0096B1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,64 +20,53 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="116dp"
         android:text="Off"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="30sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="17dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.854"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="4dp"
         android:text="Drop"
         android:textColor="@android:color/holo_orange_light"
-        android:textSize="24sp"
+        android:textSize="50sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="55dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="16dp"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="36dp"
-        android:layout_height="32dp"
-        app:srcCompat="@drawable/full_heart"
-        tools:layout_editor_absoluteX="350dp"
-        tools:layout_editor_absoluteY="16dp" />
-
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="412dp"
-        android:layout_height="133dp"
+        android:layout_width="411dp"
+        android:layout_height="113dp"
+        android:layout_marginTop="16dp"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/fons_main_menu"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="65dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        app:srcCompat="@drawable/fons_main_menu" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="267dp"
-        android:layout_height="52dp"
+        android:id="@+id/EmployeesButton"
+        android:layout_width="261dp"
+        android:layout_height="76sp"
         android:backgroundTint="#545454"
-        android:text="RESTAURANTS"
+        android:text="Employee List"
         android:textColor="#D7D7D7"
         android:textSize="24sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="76dp"
-        tools:layout_editor_absoluteY="105dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintEnd_toEndOf="@+id/imageView5"
+        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintStart_toStartOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="@+id/imageView5" />
 
     <TextView
         android:id="@+id/textView19"
@@ -109,87 +89,39 @@
         tools:layout_editor_absoluteX="5dp"
         tools:layout_editor_absoluteY="674dp" />
 
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="275dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="32dp"
-        android:background="#FEBA54"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="268dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="28dp"
+        android:text="Restaurant List"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/EmployeesButton"
+        app:layout_constraintStart_toStartOf="@+id/EmployeesButton"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
-    <TextView
-        android:id="@+id/textView21"
-        android:layout_width="275dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="24dp"
-        android:background="#FEBA54"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView20" />
-
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="275dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="24dp"
-        android:background="#FEBA54"
-        app:layout_constraintBottom_toTopOf="@+id/textView19"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView21"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="113dp"
-        android:layout_height="106dp"
-        android:scaleY="1.5"
-        app:srcCompat="@drawable/desserts"
-        tools:layout_editor_absoluteX="76dp"
-        tools:layout_editor_absoluteY="237dp" />
-
-    <TextView
-        android:id="@+id/textView23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Desserts"
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="265dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="28dp"
+        android:text="Product List"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="212dp"
-        tools:layout_editor_absoluteY="276dp" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintStart_toStartOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="113dp"
-        android:layout_height="105dp"
-        app:srcCompat="@drawable/dinner"
-        tools:layout_editor_absoluteX="76dp"
-        tools:layout_editor_absoluteY="382dp" />
-
-    <TextView
-        android:id="@+id/textView27"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dinner"
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="264dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="28dp"
+        android:text="Route List"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="216dp"
-        tools:layout_editor_absoluteY="421dp" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/button4"
+        app:layout_constraintStart_toStartOf="@+id/button4"
+        app:layout_constraintTop_toBottomOf="@+id/button4" />
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="111dp"
-        android:layout_height="104dp"
-        app:srcCompat="@drawable/breakfast"
-        tools:layout_editor_absoluteX="76dp"
-        tools:layout_editor_absoluteY="525dp" />
-
-    <TextView
-        android:id="@+id/textView28"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Breakfast"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="205dp"
-        tools:layout_editor_absoluteY="565dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
