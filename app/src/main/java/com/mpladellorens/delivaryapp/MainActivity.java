@@ -27,9 +27,8 @@ public class MainActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.PasswordEditText);
         logInButton = findViewById(R.id.LogInButton);
         registerButton = findViewById(R.id.SignInButton);
-
         authUtilities = new FirebaseAuthUtilities();
-
+/*
         logInButton.setOnClickListener(view -> {
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
@@ -44,16 +43,26 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Sign in successful
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        // Update UI based on the signed-in user (you might call updateUI method here)
                         Log.d("MainActivity", "log in successful.");
+                        Utilities.goTo(MainActivity.this, MainMenu.class);
+
                     } else {
                         // Sign in failed
-                        // Handle failure, display an error message, etc.
                         Log.d("MainActivity", "wrong user or password.");
                         Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
-    }
+        */
+
+            registerButton.setOnClickListener(view -> {
+                // Perform actions when the registerButton is clicked
+                // For instance, navigate to the Register activity
+
+                Utilities.goTo(MainActivity.this, Register.class);
+            });
+
+        }
 }
+

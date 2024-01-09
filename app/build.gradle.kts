@@ -44,5 +44,5 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.google.firebase:firebase-database:20.3.0") // Replace with the Firebase SDK module you need
     implementation ("com.google.firebase:firebase-auth:22.3.0") // Replace with the Firebase Auth version you need
-
+    implementation ("com.google.firebase:firebase-firestore:24.0.0")
 }
