@@ -31,11 +31,14 @@ public class FirebaseAuthUtilities {
 
         // Add the business details to the 'businesses' collection
         db.collection("businesses")
-                .add(businessData)
+                .document(name) // Use the name as the document ID for the business
+                .set(businessData)
                 .addOnSuccessListener(documentReference -> {
                     // On successful business registration, create a subcollection for employees
-                    String businessId = documentReference.getId();
+                    String businessId = name;
                     createEmployeesSubcollection(businessId, successListener, failureListener);
+                    createProductsSubcollection(businessId, successListener, failureListener);
+                    createRestaurantsSubcollection(businessId,successListener,failureListener);
                 })
                 .addOnFailureListener(failureListener);
     }
@@ -53,6 +56,34 @@ public class FirebaseAuthUtilities {
         db.collection("businesses").document(businessId)
                 .collection("employees")
                 .add(employeeData)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(failureListener);
+    }
+    private void createProductsSubcollection(String productId, OnSuccessListener<DocumentReference> successListener, OnFailureListener failureListener) {
+        // Create a subcollection "employees" inside the business document
+        Map<String, Object> productData = new HashMap<>();
+        productData.put("name", "");
+        productData.put("Category", "");
+        productData.put("Description", "");
+        productData.put("Price", "");
+        productData.put("Stock", "");
+
+        db.collection("businesses").document(productId)
+                .collection("products")
+                .add(productData)
+                .addOnSuccessListener(successListener)
+                .addOnFailureListener(failureListener);
+    }
+    private void createRestaurantsSubcollection(String restaurantId, OnSuccessListener<DocumentReference> successListener, OnFailureListener failureListener) {
+        // Create a subcollection "employees" inside the business document
+        Map<String, Object> restaurantData = new HashMap<>();
+        restaurantData.put("Name", "");
+        restaurantData.put("Location", "");
+        restaurantData.put("AutoVending", "");
+
+        db.collection("businesses").document(restaurantId)
+                .collection("Restaurants")
+                .add(restaurantData)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
     }
