@@ -11,6 +11,7 @@
         android:id="@+id/textView6"
         android:layout_width="78dp"
         android:layout_height="73dp"
+        android:background="#535353"
         android:text="Off"
         android:textColor="@color/black"
         android:textSize="45sp"
@@ -27,7 +28,8 @@
         android:layout_width="136dp"
         android:layout_height="79dp"
         android:layout_marginStart="116dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
+        android:background="#535353"
         android:text="Drop"
         android:textColor="@android:color/holo_orange_light"
         android:textSize="60sp"
@@ -35,93 +37,220 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/EmailEditText"
-        android:layout_width="288dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="12dp"
-        android:background="#FFFFFF"
-        android:ems="10"
-        android:hint="E-mail"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <EditText
-        android:id="@+id/PasswordEditText"
-        android:layout_width="287dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="24dp"
-        android:background="#FFFFFF"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <TextView
-        android:id="@+id/textView"
+    <Button
+        android:id="@+id/BusinessUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
-        android:text="E-mail"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.167"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:width="160sp"
+        android:text="Business User"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <Button
+        android:id="@+id/NormalUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Password"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/EmailEditText"
-        app:layout_constraintTop_toBottomOf="@+id/EmailEditText" />
+        android:layout_marginStart="40dp"
+        android:width="160sp"
+        android:text="Normal User"
+        app:layout_constraintStart_toEndOf="@+id/BusinessUser"
+        app:layout_constraintTop_toTopOf="@+id/BusinessUser" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="196dp"
-        android:text="Don't have an account?"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/LogInButton"
-        app:layout_constraintTop_toBottomOf="@+id/LogInButton" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/NormalLogIn"
+        android:layout_width="416dp"
+        android:layout_height="461dp"
+        android:visibility="invisible"
+        app:chainUseRtl="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BusinessUser"
+        app:layout_optimizationLevel="chains">
 
-    <Button
-        android:id="@+id/LogInButton"
-        android:layout_width="286dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#FEBA33"
-        android:text="Log In"
-        app:layout_constraintStart_toStartOf="@+id/PasswordEditText"
-        app:layout_constraintTop_toBottomOf="@+id/PasswordEditText" />
+        <TextView
+            android:id="@+id/businesNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="68dp"
+            android:layout_marginTop="44dp"
+            android:text="Business name"
+            android:textColor="#FFFFFF"
+            android:textColorHighlight="#FFFFFF"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/SignInButton"
-        android:layout_width="124dp"
-        android:layout_height="47dp"
-        android:backgroundTint="#00FFFFFF"
-        android:text="Sign Up!"
-        android:textColor="#FDB933"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textView3"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/textView3" />
+        <TextView
+            android:id="@+id/textVie2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="E-mail"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/BusinessNameEditText"
+            app:layout_constraintTop_toBottomOf="@+id/BusinessNameEditText" />
+
+        <TextView
+            android:id="@+id/textVie3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Password"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/UserEmail"
+            app:layout_constraintTop_toBottomOf="@+id/UserEmail" />
+
+        <EditText
+            android:id="@+id/UserPassword"
+            android:layout_width="287dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="12dp"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            app:layout_constraintStart_toStartOf="@+id/textVie3"
+            app:layout_constraintTop_toBottomOf="@+id/textVie3" />
+
+        <EditText
+            android:id="@+id/UserEmail"
+            android:layout_width="288dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="12dp"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:hint="E-mail"
+            android:inputType="textEmailAddress"
+            app:layout_constraintStart_toStartOf="@+id/textVie2"
+            app:layout_constraintTop_toBottomOf="@+id/textVie2" />
+
+        <EditText
+            android:id="@+id/BusinessNameEditText"
+            android:layout_width="288dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="12dp"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:hint="Business Name"
+            android:inputType="textEmailAddress"
+            app:layout_constraintStart_toStartOf="@+id/businesNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/businesNameTextView" />
+
+        <Button
+            android:id="@+id/NormalLogInButton"
+            android:layout_width="286dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="68dp"
+            android:backgroundTint="#FEBA33"
+            android:text="Log In"
+            app:layout_constraintStart_toStartOf="@+id/UserPassword"
+            app:layout_constraintTop_toBottomOf="@+id/UserPassword" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/BusinessLogIn"
+        android:layout_width="409dp"
+        android:layout_height="463dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/NormalLogIn"
+        app:layout_constraintTop_toBottomOf="@+id/BusinessUser"
+        app:layout_optimizationLevel="chains">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="68dp"
+            android:layout_marginTop="52dp"
+            android:text="E-mail"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="Password"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/BusinessEmail"
+            app:layout_constraintTop_toBottomOf="@+id/BusinessEmail" />
+
+        <EditText
+            android:id="@+id/BusinessPassword"
+            android:layout_width="287dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="12dp"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:text="123456"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <EditText
+            android:id="@+id/BusinessEmail"
+            android:layout_width="288dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="12dp"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:hint="E-mail"
+            android:inputType="textEmailAddress"
+            android:text="1234@gmail.com"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <Button
+            android:id="@+id/BusinessLogInButton"
+            android:layout_width="286dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="68dp"
+            android:backgroundTint="#FEBA33"
+            android:text="Log In"
+            app:layout_constraintStart_toStartOf="@+id/BusinessPassword"
+            app:layout_constraintTop_toBottomOf="@+id/BusinessPassword" />
+
+        <Button
+            android:id="@+id/SignInButton"
+            android:layout_width="124dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="144dp"
+            android:backgroundTint="#00FFFFFF"
+            android:text="Sign Up!"
+            android:textColor="#FDB933"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/textView3"
+            app:layout_constraintStart_toStartOf="@+id/textView3"
+            app:layout_constraintTop_toTopOf="@+id/textView3"
+            app:layout_constraintVertical_bias="0.6" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="56dp"
+            android:text="Don't have an account?"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/BusinessLogInButton"
+            app:layout_constraintTop_toBottomOf="@+id/BusinessLogInButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

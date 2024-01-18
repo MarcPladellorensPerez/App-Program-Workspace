@@ -45,4 +45,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-database:20.3.0") // Replace with the Firebase SDK module you need
     implementation ("com.google.firebase:firebase-auth:22.3.0") // Replace with the Firebase Auth version you need
     implementation ("com.google.firebase:firebase-firestore:24.0.0")
+    implementation ("com.google.android.gms:play-services-tasks:17.2.1")
+
+
+
 }

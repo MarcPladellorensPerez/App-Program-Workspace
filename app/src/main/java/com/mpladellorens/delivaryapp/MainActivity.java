@@ -1,68 +1,117 @@
 package com.mpladellorens.delivaryapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 
 public class MainActivity extends AppCompatActivity {
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private Button logInButton;
+    private EditText userEmailEditText;
+    private EditText userPasswordEditText;
+    private Button userLogInButton;
+    private EditText businessEmailEditText;
+    private EditText businessPasswordEditText;
+    private Button businessLogInButton;
     private Button registerButton;
     private FirebaseAuthUtilities authUtilities;
+    ConstraintLayout businessLogIn;
+    ConstraintLayout normalLogIn;
+    Button businessButton;
+    Button userButton;
+    private boolean BusinessUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        emailEditText = findViewById(R.id.EmailEditText);
-        passwordEditText = findViewById(R.id.PasswordEditText);
-        logInButton = findViewById(R.id.LogInButton);
+        businessLogIn = findViewById(R.id.BusinessLogIn);
+        businessLogInButton = findViewById(R.id.BusinessLogInButton);
+        normalLogIn = findViewById(R.id.NormalLogIn);
+        businessButton = findViewById(R.id.BusinessUser);
+        userButton = findViewById(R.id.NormalUser);
+        userEmailEditText = findViewById(R.id.UserEmail);
+        userPasswordEditText = findViewById(R.id.UserPassword);
+        userLogInButton = findViewById(R.id.NormalLogInButton);
         registerButton = findViewById(R.id.SignInButton);
         authUtilities = new FirebaseAuthUtilities();
-/*
-        logInButton.setOnClickListener(view -> {
-            String email = emailEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
+        businessPasswordEditText =findViewById(R.id.BusinessPassword);
+        businessEmailEditText =findViewById(R.id.BusinessEmail);
 
-            if (email.isEmpty() || password.isEmpty()) {
-                // Handle empty email or password field
-                Toast.makeText(MainActivity.this, "Email or password cannot be empty.", Toast.LENGTH_SHORT).show();
-                Log.d("MainActivity", "Email or password is empty.");
-            } else {
-                // Call the signInWithEmailAndPassword method from FirebaseAuthUtilities
-                authUtilities.signInWithEmailAndPassword(email, password, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in successful
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        Log.d("MainActivity", "log in successful.");
-                        Utilities.goTo(MainActivity.this, MainMenu.class);
+        businessButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                businessLogIn.setVisibility(View.VISIBLE);
+                normalLogIn.setVisibility(View.GONE);
+                BusinessUser = true;
+            }
+        });
 
-                    } else {
-                        // Sign in failed
-                        Log.d("MainActivity", "wrong user or password.");
-                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+        userButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                businessLogIn.setVisibility(View.GONE);
+                normalLogIn.setVisibility(View.VISIBLE);
+                BusinessUser = false;
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Register.class);
+                startActivity(intent);
+            }
+        });
+
+        userLogInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = userEmailEditText.getText().toString();
+                String password = userPasswordEditText.getText().toString();
+                Log.d("TAG", "click");
+                authUtilities.loginEmployee("businessName", email, password, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "Login successful");
+                            Intent intent = new Intent(MainActivity.this, EmployeesList.class);
+                            startActivity(intent);
+                        } else {
+                            Log.e("TAG", "Login not successful", task.getException());
+                        }
                     }
                 });
             }
         });
-        */
-
-            registerButton.setOnClickListener(view -> {
-                // Perform actions when the registerButton is clicked
-                // For instance, navigate to the Register activity
-
-                Utilities.goTo(MainActivity.this, Register.class);
-            });
-
-        }
+        businessLogInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = businessEmailEditText.getText().toString();
+                String password = businessPasswordEditText.getText().toString();
+                Log.d("TAG", "click");
+                authUtilities.loginBusiness(email, password, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("TAG", "Login successful");
+                            Intent intent = new Intent(MainActivity.this, MainMenu.class);
+                            startActivity(intent);
+                        } else {
+                            Log.e("TAG", "Login not successful", task.getException());
+                        }
+                    }
+                });
+            }
+        });
+    }
 }
-
