@@ -78,19 +78,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/SignInButton"
-        android:layout_width="406dp"
-        android:layout_height="55dp"
-        android:backgroundTint="#00FFFFFF"
-        android:text="Add your local"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="674dp" />
-
-    <Button
-        android:id="@+id/button"
+        android:id="@+id/RestaurantButton"
         android:layout_width="268dp"
         android:layout_height="74dp"
         android:layout_marginTop="28dp"
@@ -101,27 +89,27 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/ProductButton"
         android:layout_width="265dp"
         android:layout_height="74dp"
         android:layout_marginTop="28dp"
         android:text="Product List"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/button"
-        app:layout_constraintStart_toStartOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintEnd_toEndOf="@+id/RestaurantButton"
+        app:layout_constraintStart_toStartOf="@+id/RestaurantButton"
+        app:layout_constraintTop_toBottomOf="@+id/RestaurantButton" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/RouteButton"
         android:layout_width="264dp"
         android:layout_height="74dp"
         android:layout_marginTop="28dp"
         android:text="Route List"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/button4"
-        app:layout_constraintStart_toStartOf="@+id/button4"
-        app:layout_constraintTop_toBottomOf="@+id/button4" />
+        app:layout_constraintEnd_toEndOf="@+id/ProductButton"
+        app:layout_constraintStart_toStartOf="@+id/ProductButton"
+        app:layout_constraintTop_toBottomOf="@+id/ProductButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

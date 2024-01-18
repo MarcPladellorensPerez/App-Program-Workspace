@@ -13,6 +13,12 @@
         android:theme="@style/Theme.DelivaryApp"
         tools:targetApi="31">
         <activity
+            android:name=".CreateEmployee"
+            android:exported="false" />
+        <activity
+            android:name=".EmployeesList"
+            android:exported="false" />
+        <activity
             android:name=".MainMenu"
             android:exported="false" />
         <activity

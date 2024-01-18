@@ -12,6 +12,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Register extends AppCompatActivity {
 
     private FirebaseFirestore db;
@@ -43,32 +46,34 @@ public class Register extends AppCompatActivity {
             String password = registerPasswordEditText.getText().toString();
             String confirmPassword = registerConfirmPasswordEditText.getText().toString();
 
+            // Assuming you have UI elements for employeesIds, salePoints, and routes
+            List<String> employeesIds = new ArrayList<>();
+            List<String> salePoints = new ArrayList<>();
+            ArrayList<List<String>> routes = new ArrayList<>();
+
             // Perform validation checks here (e.g., check if fields are not empty, passwords match, etc.)
             if (password.equals(confirmPassword)) {
-                // If validation passes, proceed with registration
-                // Call the registerBusiness method from FirebaseAuthUtilities or FirebaseDbUtilities
 
                 FirebaseAuthUtilities authUtilities = new FirebaseAuthUtilities();
-                authUtilities.registerBusiness(businessName, email, address, password, phoneNumber,
+                authUtilities.registerBusiness(
+                        businessName, email, address, password, phoneNumber,
+                        employeesIds, salePoints, routes,
                         aVoid -> {
                             // Registration successful
                             Toast.makeText(Register.this, "Registration successful!", Toast.LENGTH_SHORT).show();
                             // Redirect the user to another screen or perform necessary actions
-                            Log.d("Register", "registration succesful.");
-
+                            Log.d("Register", "registration successful.");
                         },
                         e -> {
                             // Registration failed
                             Toast.makeText(Register.this, "Registration failed! Please try again.", Toast.LENGTH_SHORT).show();
                             // Handle failure (e.g., show error message, allow user to retry, etc.)
                             Log.d("Register", "registration failed.");
-
                         });
             } else {
                 // Handle validation errors (e.g., show error messages for invalid input)
                 Toast.makeText(Register.this, "Passwords aren't the same.", Toast.LENGTH_SHORT).show();
-                Log.d("Register", "passwords arent the same.");
-
+                Log.d("Register", "passwords aren't the same.");
             }
         });
     }
