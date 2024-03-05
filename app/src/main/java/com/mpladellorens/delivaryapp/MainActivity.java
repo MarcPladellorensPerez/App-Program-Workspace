@@ -1,10 +1,14 @@
 package com.mpladellorens.delivaryapp;
 
+import static android.app.PendingIntent.getActivity;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.widget.EditText;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     private EditText userEmailEditText;
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout normalLogIn;
     Button businessButton;
     Button userButton;
+    private EditText BusinessNameEditText;
     private boolean BusinessUser;
 
     @Override
@@ -46,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
         authUtilities = new FirebaseAuthUtilities();
         businessPasswordEditText =findViewById(R.id.BusinessPassword);
         businessEmailEditText =findViewById(R.id.BusinessEmail);
-
+        BusinessNameEditText = findViewById(R.id.BusinessNameEditText);
+        Context context = MainActivity.this;
         businessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,15 +83,17 @@ public class MainActivity extends AppCompatActivity {
         userLogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String businessName= BusinessNameEditText.getText().toString();
                 String email = userEmailEditText.getText().toString();
                 String password = userPasswordEditText.getText().toString();
                 Log.d("TAG", "click");
-                authUtilities.loginEmployee("businessName", email, password, new OnCompleteListener<AuthResult>() {
+                authUtilities.loginEmployee(businessName, email, password, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("TAG", "Login successful");
-                            Intent intent = new Intent(MainActivity.this, EmployeesList.class);
+
+                            Intent intent = new Intent(MainActivity.this, MainMenu.class);
                             startActivity(intent);
                         } else {
                             Log.e("TAG", "Login not successful", task.getException());

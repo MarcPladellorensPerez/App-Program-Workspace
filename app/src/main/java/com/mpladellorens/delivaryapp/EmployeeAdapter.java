@@ -65,6 +65,13 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         return employeeList.size();
     }
 
+    // Método para actualizar los datos del adaptador
+    public void updateData(List<Employee> newEmployeeList) {
+        this.employeeList.clear();
+        this.employeeList.addAll(newEmployeeList);
+        notifyDataSetChanged();
+    }
+
     public static class EmployeeViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView surnameTextView;
@@ -84,6 +91,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
             adminCheckBox = itemView.findViewById(R.id.AdminCheckBox);
             editButton = itemView.findViewById(R.id.Edit);
             deleteButton = itemView.findViewById(R.id.button2);
+
         }
+
     }
 }

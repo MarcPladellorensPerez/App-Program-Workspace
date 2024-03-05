@@ -1,5 +1,6 @@
 package com.mpladellorens.delivaryapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +22,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CreateEmployee extends AppCompatActivity {
@@ -82,43 +85,50 @@ public class CreateEmployee extends AppCompatActivity {
                         if (authTask.isSuccessful()) {
                             // User created successfully in authentication system
                             Toast.makeText(CreateEmployee.this, "User created successfully in authentication", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CreateEmployee.this, EmployeesList.class);
+                            startActivity(intent);
+                            finish();
 
                             // Get the employee ID assigned by Firestore
                             String employeeId = authTask.getResult().getUser().getUid();
 
-                            // Create a reference to the "Employees" collection
-                            DocumentReference employeeDocument = db.collection("Employees").document(employeeId);
+                            // Update the business with the employee ID first
+                            db.collection("businesses")
+                                    .document(userId)
+                                    .update("EmployeesIds", FieldValue.arrayUnion(employeeId))
+                                    .addOnCompleteListener(updateTask -> {
+                                        if (updateTask.isSuccessful()) {
+                                            // Business updated with employee ID successfully
+                                            Toast.makeText(CreateEmployee.this, "Employee ID added to business", Toast.LENGTH_SHORT).show();
+                                            // Create a reference to the "Employees" collection
+                                            DocumentReference employeeDocument = db.collection("Employees").document(employeeId);
 
-                            Map<String, Object> employeeData = new HashMap<>();
-                            employeeData.put("name", name);
-                            employeeData.put("surname", surname);
-                            employeeData.put("email", email);
-                            employeeData.put("phone", phone);
-                            employeeData.put("isAdmin", isAdmin);
+                                            Map<String, Object> employeeData = new HashMap<>();
+                                            employeeData.put("name", name);
+                                            employeeData.put("surname", surname);
+                                            employeeData.put("email", email);
+                                            employeeData.put("phone", phone);
+                                            employeeData.put("isAdmin", isAdmin);
 
-                            // Add the employee data to the "Employees" collection
-                            employeeDocument.set(employeeData)
-                                    .addOnCompleteListener(employeeDataTask -> {
-                                        if (employeeDataTask.isSuccessful()) {
-                                            // Employee data added successfully
-                                            // Add the employee ID to the business's EmployeesIds array
-                                            db.collection("businesses")
-                                                    .document(userId)
-                                                    .update("EmployeesIds", FieldValue.arrayUnion(employeeId))
-                                                    .addOnCompleteListener(updateTask -> {
-                                                        if (updateTask.isSuccessful()) {
+                                            List<String> stringArray = Arrays.asList();
+                                            employeeData.put("routesIds", stringArray);
+
+                                            employeeDocument.set(employeeData)
+                                                    .addOnCompleteListener(employeeDataTask -> {
+                                                        if (employeeDataTask.isSuccessful()) {
+                                                            // Employee data added successfully
                                                             Toast.makeText(CreateEmployee.this, "Employee created successfully", Toast.LENGTH_SHORT).show();
                                                         } else {
-                                                            Toast.makeText(CreateEmployee.this, "Failed to update business with employee ID: " + updateTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                                            Log.d("Firestore", "Business document ID: " + userId);
+                                                            // Failed to add employee data
+                                                            Toast.makeText(CreateEmployee.this, "Failed to add employee data: " + employeeDataTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                             Log.d("Firestore", "Employee document ID: " + employeeId);
                                                         }
                                                     });
+
                                         } else {
-                                            // Failed to add employee data
-                                            Toast.makeText(CreateEmployee.this, "Failed to add employee data: " + employeeDataTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            // Failed to update business with employee ID
+                                            Toast.makeText(CreateEmployee.this, "Failed to update business with employee ID: " + updateTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                             Log.d("Firestore", "Business document ID: " + userId);
-                                            Log.d("Firestore", "Employee document ID: " + employeeId);
                                         }
                                     });
                         } else {

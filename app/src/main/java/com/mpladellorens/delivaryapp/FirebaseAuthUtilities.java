@@ -70,31 +70,41 @@ public class FirebaseAuthUtilities {
 
 
     public void loginEmployee(String businessName, String employeeEmail, String employeePassword, OnCompleteListener<AuthResult> completeListener) {
-        db.collection("businesses")
-                .whereEqualTo("name", businessName) // Find the business with the specified name
+        // First, check if the employee exists
+        db.collection("Employees")
+                .whereEqualTo("email", employeeEmail)
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // Business found, now try to log in the employee
-                        String businessId = task.getResult().getDocuments().get(0).getId();
+                .addOnCompleteListener(employeeTask -> {
+                    if (employeeTask.isSuccessful() && !employeeTask.getResult().isEmpty()) {
+                        // Employee found, now get the employeeId
+                        String employeeId = employeeTask.getResult().getDocuments().get(0).getId();
+
+                        // Now, check if the business exists
                         db.collection("businesses")
-                                .document(businessId)
-                                .collection("employees")
-                                .whereEqualTo("email", employeeEmail)
-                                .whereEqualTo("password", employeePassword)
+                                .whereEqualTo("name", businessName)
                                 .get()
-                                .addOnCompleteListener(employeeTask -> {
-                                    if (employeeTask.isSuccessful() && !employeeTask.getResult().isEmpty()) {
-                                        mAuth.signInWithEmailAndPassword(employeeEmail, employeePassword)
-                                                .addOnCompleteListener(completeListener);
+                                .addOnCompleteListener(businessTask -> {
+                                    if (businessTask.isSuccessful() && !businessTask.getResult().isEmpty()) {
+                                        // Business found, now get the EmployeesIds
+                                        List<String> employeesIds = (List<String>) businessTask.getResult().getDocuments().get(0).get("EmployeesIds");
+
+                                        // Check if the employeeId is in the EmployeesIds
+                                        if (employeesIds != null && employeesIds.contains(employeeId)) {
+                                            // Employee is associated with the business, proceed with the login
+                                            mAuth.signInWithEmailAndPassword(employeeEmail, employeePassword)
+                                                    .addOnCompleteListener(completeListener);
+                                        } else {
+                                            // Employee is not associated with the business
+                                            completeListener.onComplete(Tasks.forException(new Exception("Employee is not associated with the business")));
+                                        }
                                     } else {
-                                        // Handle employee login failure (e.g., invalid credentials)
-                                        completeListener.onComplete(Tasks.forException(new Exception("Invalid credentials")));
+                                        // Business not found
+                                        completeListener.onComplete(Tasks.forException(new Exception("Business not found")));
                                     }
                                 });
                     } else {
-                        // Handle business not found
-                        completeListener.onComplete(Tasks.forException(new Exception("Business not found")));
+                        // Employee not found
+                        completeListener.onComplete(Tasks.forException(new Exception("Employee not found")));
                     }
                 });
     }
