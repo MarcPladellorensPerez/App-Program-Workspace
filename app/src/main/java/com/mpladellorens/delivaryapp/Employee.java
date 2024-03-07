@@ -1,6 +1,8 @@
 package com.mpladellorens.delivaryapp;
 
-public class Employee {
+import java.io.Serializable;
+
+public class Employee implements Serializable {
     private String name;
     private String surname;
     private String phone;
@@ -8,8 +10,7 @@ public class Employee {
     private boolean isAdmin;
 
     // Required empty constructor for Firestore
-    public Employee() {
-    }
+    public Employee() {}
 
     public Employee(String name, String surname, String phone, String email, boolean isAdmin) {
         this.name = name;
@@ -20,23 +21,9 @@ public class Employee {
     }
 
     // Getter methods
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
-    }
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public String getPhone() { return phone; }
+    public String getEmail() { return email; }
+    public boolean isAdmin() { return isAdmin; }
 }

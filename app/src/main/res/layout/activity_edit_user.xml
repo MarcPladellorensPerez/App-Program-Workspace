@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#535353"
-    tools:context=".CreateEmployee">
+    tools:context=".EditUserActivity">
 
     <TextView
         android:id="@+id/textView28"
@@ -43,29 +43,6 @@
         app:layout_constraintStart_toStartOf="@+id/emailEditText"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
-    <TextView
-        android:id="@+id/textView31"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/checkBox"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
-
-    <TextView
-        android:id="@+id/textView32"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Confirm Password"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/PasswordEditText"
-        app:layout_constraintTop_toBottomOf="@+id/PasswordEditText" />
-
     <EditText
         android:id="@+id/SurnameEditText"
         android:layout_width="315dp"
@@ -101,30 +78,6 @@
         android:inputType="text"
         app:layout_constraintStart_toStartOf="@+id/textView30"
         app:layout_constraintTop_toBottomOf="@+id/textView30" />
-
-    <EditText
-        android:id="@+id/PasswordEditText"
-        android:layout_width="315dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/white"
-        android:ems="10"
-        android:hint="Pasword"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/textView31"
-        app:layout_constraintTop_toBottomOf="@+id/textView31" />
-
-    <EditText
-        android:id="@+id/ConfirmPasswordEditText"
-        android:layout_width="315dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/white"
-        android:ems="10"
-        android:hint="Pasword"
-        android:inputType="text"
-        app:layout_constraintStart_toStartOf="@+id/textView32"
-        app:layout_constraintTop_toBottomOf="@+id/textView32" />
 
     <EditText
         android:id="@+id/NameEditText"
@@ -182,25 +135,22 @@
         app:layout_constraintTop_toTopOf="@+id/textView5"
         app:layout_constraintVertical_bias="0.0" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:shadowColor="#FFFFFF"
-        android:text="Admin"
-        android:textColor="#FFFFFF"
-        android:textColorHighlight="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        app:layout_constraintStart_toStartOf="@+id/PhoneEditText"
-        app:layout_constraintTop_toBottomOf="@+id/PhoneEditText" />
-
     <Button
         android:id="@+id/Save"
         android:layout_width="140dp"
         android:layout_height="47dp"
         android:layout_marginStart="132dp"
-        android:layout_marginTop="16dp"
-        android:text="CreateUser"
+        android:layout_marginTop="8dp"
+        android:text="Save"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ConfirmPasswordEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/RouteIds" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RouteIds"
+        android:layout_width="318dp"
+        android:layout_height="165dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PhoneEditText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

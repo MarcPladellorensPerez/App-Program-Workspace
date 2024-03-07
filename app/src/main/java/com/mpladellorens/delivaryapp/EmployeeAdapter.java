@@ -1,6 +1,7 @@
 package com.mpladellorens.delivaryapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,12 @@ import java.util.List;
 public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder> {
 
     private List<Employee> employeeList;
+    private List<String> employeeIdList; // List to store the IDs
     private Context context;
 
-    public EmployeeAdapter(List<Employee> employeeList, Context context) {
+    public EmployeeAdapter(List<Employee> employeeList, List<String> employeeIdList, Context context) {
         this.employeeList = employeeList;
+        this.employeeIdList = employeeIdList; // Initialize the ID list
         this.context = context;
     }
 
@@ -42,22 +45,10 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         holder.adminCheckBox.setChecked(employee.isAdmin());
 
         // Set OnClickListener for the Edit button (You can handle the click event as per your requirements)
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Handle Edit button click
-                // You can open an editing activity, show a dialog, etc.
-            }
-        });
+
 
         // Set OnClickListener for the Delete button (You can handle the click event as per your requirements)
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Handle Delete button click
-                // You can show a confirmation dialog, delete the item, etc.
-            }
-        });
+
     }
 
     @Override
@@ -66,33 +57,51 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     }
 
     // Método para actualizar los datos del adaptador
-    public void updateData(List<Employee> newEmployeeList) {
+    public void updateData(List<Employee> newEmployeeList, List<String> newEmployeeIdList) {
         this.employeeList.clear();
         this.employeeList.addAll(newEmployeeList);
+
+        this.employeeIdList.clear(); // Assuming you have a employeeIdList in your adapter
+        this.employeeIdList.addAll(newEmployeeIdList);
+
         notifyDataSetChanged();
     }
+        public class EmployeeViewHolder extends RecyclerView.ViewHolder {
+            TextView nameTextView;
+            TextView surnameTextView;
+            TextView phoneTextView;
+            TextView emailTextView;
+            CheckBox adminCheckBox;
+            Button editButton;
+            Button deleteButton;
 
-    public static class EmployeeViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        TextView surnameTextView;
-        TextView phoneTextView;
-        TextView emailTextView;
-        CheckBox adminCheckBox;
-        Button editButton;
-        Button deleteButton;
+            public EmployeeViewHolder(@NonNull View itemView) {
+                super(itemView);
 
-        public EmployeeViewHolder(@NonNull View itemView) {
-            super(itemView);
+                nameTextView = itemView.findViewById(R.id.Name);
+                surnameTextView = itemView.findViewById(R.id.surname);
+                phoneTextView = itemView.findViewById(R.id.Telephone);
+                emailTextView = itemView.findViewById(R.id.Email);
+                adminCheckBox = itemView.findViewById(R.id.AdminCheckBox);
 
-            nameTextView = itemView.findViewById(R.id.Name);
-            surnameTextView = itemView.findViewById(R.id.surname);
-            phoneTextView = itemView.findViewById(R.id.Telephone);
-            emailTextView = itemView.findViewById(R.id.Email);
-            adminCheckBox = itemView.findViewById(R.id.AdminCheckBox);
-            editButton = itemView.findViewById(R.id.Edit);
-            deleteButton = itemView.findViewById(R.id.button2);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            Employee employee = employeeList.get(position);
+                            String userDocId = employeeIdList.get(position); // Get the document ID
+
+                            Intent intent = new Intent(v.getContext(), EditUserActivity.class);
+                            intent.putExtra("EXTRA_EMPLOYEE", employee); // Pass the Employee object
+                            intent.putExtra("EXTRA_USER_DOC_ID", userDocId); // Pass the document ID
+                            v.getContext().startActivity(intent);
+                        }
+                    }
+                });
+
+            }
 
         }
 
-    }
 }

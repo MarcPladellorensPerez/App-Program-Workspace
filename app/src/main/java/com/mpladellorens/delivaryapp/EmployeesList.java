@@ -37,7 +37,7 @@ public class EmployeesList extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter with an empty list at the beginning
-        employeeAdapter = new EmployeeAdapter(new ArrayList<>(), EmployeesList.this);
+        employeeAdapter = new EmployeeAdapter(new ArrayList<>(), new ArrayList<>(), EmployeesList.this);
         recyclerView.setAdapter(employeeAdapter);
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
         String userLoginId = sharedPreferences.getString(getString(R.string.userId_key), null);
@@ -97,17 +97,19 @@ public class EmployeesList extends AppCompatActivity {
             public void onComplete(@NonNull Task<List<DocumentSnapshot>> task) {
                 if (task.isSuccessful()) {
                     List<Employee> employeeList = new ArrayList<>();
+                    List<String> employeeIdList = new ArrayList<>(); // List to store the IDs
                     for (DocumentSnapshot document : task.getResult()) {
                         if (document.exists()) {
                             Employee employee = document.toObject(Employee.class);
                             if (employee != null) {
                                 employeeList.add(employee);
+                                employeeIdList.add(document.getId()); // Add the document ID to the list
                             }
                         }
                     }
 
-                    // Update the data of the adapter and notify the RecyclerView that the data has changed
-                    employeeAdapter.updateData(employeeList);
+                    // Update the data and IDs of the adapter and notify the RecyclerView that the data has changed
+                    employeeAdapter.updateData(employeeList, employeeIdList); // Assuming you have a method to update the IDs
                     employeeAdapter.notifyDataSetChanged();
                 } else {
                     Log.d("EmployeesList", "get failed with ", task.getException());
