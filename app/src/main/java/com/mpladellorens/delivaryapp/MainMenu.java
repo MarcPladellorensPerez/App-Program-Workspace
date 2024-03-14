@@ -15,7 +15,7 @@ public class MainMenu extends AppCompatActivity {
 
     Button employeesButton;
     Button restaurantButton;
-    Button productButton;
+    Button sellPointsButton;
     Button routeButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,8 @@ public class MainMenu extends AppCompatActivity {
         editor.putString(getString(R.string.userId_key), FirebaseAuth.getInstance().getCurrentUser().getUid());
         editor.apply();
          employeesButton = findViewById(R.id.EmployeesButton);
-         restaurantButton = findViewById(R.id.RestaurantButton);
-         productButton = findViewById(R.id.ProductButton);
+
+         sellPointsButton = findViewById(R.id.sellPointsButton);
          routeButton = findViewById(R.id.RouteButton);
         employeesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,8 +40,13 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        sellPointsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Start EmployeesList activity
+                Intent intent = new Intent(MainMenu.this, SellPointsList.class);
+                startActivity(intent);
+            }
+        });
     }
-
-
 }

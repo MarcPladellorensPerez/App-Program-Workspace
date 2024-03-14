@@ -42,7 +42,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         holder.surnameTextView.setText(employee.getSurname());
         holder.phoneTextView.setText(employee.getPhone());
         holder.emailTextView.setText(employee.getEmail());
-        holder.adminCheckBox.setChecked(employee.isAdmin());
+
 
         // Set OnClickListener for the Edit button (You can handle the click event as per your requirements)
 
@@ -82,7 +82,7 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
                 surnameTextView = itemView.findViewById(R.id.surname);
                 phoneTextView = itemView.findViewById(R.id.Telephone);
                 emailTextView = itemView.findViewById(R.id.Email);
-                adminCheckBox = itemView.findViewById(R.id.AdminCheckBox);
+
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

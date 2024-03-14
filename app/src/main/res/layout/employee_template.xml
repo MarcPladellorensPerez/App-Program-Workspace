@@ -19,7 +19,7 @@
         android:id="@+id/Email"
         android:layout_width="193dp"
         android:layout_height="32dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
@@ -43,6 +43,7 @@
         android:id="@+id/surname"
         android:layout_width="102dp"
         android:layout_height="31dp"
+        android:layout_marginStart="64dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/Name"
@@ -50,13 +51,4 @@
         app:layout_constraintTop_toTopOf="@+id/Name"
         app:layout_constraintVertical_bias="0.0" />
 
-    <CheckBox
-        android:id="@+id/AdminCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Admin"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/Telephone"
-        app:layout_constraintTop_toBottomOf="@+id/Telephone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

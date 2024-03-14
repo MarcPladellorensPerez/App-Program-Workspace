@@ -47,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/CreateEmployee"
+        android:id="@+id/CreateSellPoint"
         android:layout_width="71dp"
         android:layout_height="66dp"
         android:layout_marginStart="332dp"

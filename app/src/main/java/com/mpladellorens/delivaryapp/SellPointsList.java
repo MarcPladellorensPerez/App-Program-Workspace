@@ -13,51 +13,51 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeesList extends AppCompatActivity {
+public class SellPointsList extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private EmployeeAdapter employeeAdapter;
+    private SellPointsAdapter SellPointsAdapter;
     String userLoginId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_employees_list);
+        setContentView(R.layout.activity_sell_points_list);
 
         recyclerView = findViewById(R.id.RecycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter with an empty list at the beginning
-        employeeAdapter = new EmployeeAdapter(new ArrayList<>(), new ArrayList<>(), EmployeesList.this);
-        recyclerView.setAdapter(employeeAdapter);
+        SellPointsAdapter = new SellPointsAdapter(new ArrayList<>(), new ArrayList<>(), SellPointsList.this);
+        recyclerView.setAdapter(SellPointsAdapter);
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
         String userLoginId = sharedPreferences.getString(getString(R.string.userId_key), null);
         if (userLoginId == null) {
-            Log.d("EmployeesList", "userId is null");
+            Log.d("SellRoutesList", "userId is null");
         } else {
-            Log.d("EmployeesList", "userId: " + userLoginId);
+            Log.d("SellRoutesList", "userId: " + userLoginId);
         }
 
 
         firebaseFetchUtils fetchUtils = new firebaseFetchUtils();
         //agafem larray de ids de dins de la business  que necesitem dins de lusuari registrat
-        fetchUtils.fetchBusinessdData(userLoginId,"EmployeesIds", new firebaseFetchUtils.FetchDataBusinessCallback() {
+        fetchUtils.fetchBusinessdData(userLoginId,"salePointsIds", new firebaseFetchUtils.FetchDataBusinessCallback() {
             @Override
-            public void onCallback(List<String> employeeIds) {
-                fetchUtils.fetchFieldData(employeeIds, "Employees", Employee.class, new firebaseFetchUtils.FetchDataFieldCallback<Employee>() {
+            public void onCallback(List<String> sellRouteIds) {
+                fetchUtils.fetchFieldData(sellRouteIds, "SellPoints", SellPoint.class, new firebaseFetchUtils.FetchDataFieldCallback<SellPoint>() {
                     @Override
-                    public void onCallback(List<Employee> itemList, List<String> itemIdList) {
+                    public void onCallback(List<SellPoint> itemList, List<String> itemIdList) {
                         // Update the adapter inside the callback function
-                        employeeAdapter.updateData(itemList, itemIdList);
-                        employeeAdapter.notifyDataSetChanged();
+                        SellPointsAdapter.updateData(itemList, itemIdList);
+                        SellPointsAdapter.notifyDataSetChanged();
                     }
                 });
             }
         });
 
-        // Set OnClickListener for the CreateEmployeeButton
+        // Set OnClickListener for the CreateSellRouteButton
         findViewById(R.id.CreateSellPoint).setOnClickListener(v -> {
-            // Launch the CreateEmployee activity
-            Intent intent = new Intent(EmployeesList.this, CreateEmployee.class);
+            // Launch the CreateSellRoute activity
+            Intent intent = new Intent(SellPointsList.this, createSellPoint.class);
             startActivity(intent);
         });
 

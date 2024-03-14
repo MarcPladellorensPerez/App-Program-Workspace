@@ -152,6 +152,9 @@ private List<route> routes;
 
                 // Update the fields in the document
                 employeeRef.update(updates);
+                Intent employeeListIntent = new Intent(EditUserActivity.this, EmployeesList.class);
+                startActivity(employeeListIntent);
+                finish();
             }
         });
     }

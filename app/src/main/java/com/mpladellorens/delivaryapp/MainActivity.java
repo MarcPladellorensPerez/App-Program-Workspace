@@ -5,10 +5,13 @@ import static android.app.PendingIntent.getActivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
+import android.Manifest;
 public class MainActivity extends AppCompatActivity {
     private EditText userEmailEditText;
     private EditText userPasswordEditText;
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     Button userButton;
     private EditText BusinessNameEditText;
     private boolean BusinessUser;
+    public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
         businessEmailEditText =findViewById(R.id.BusinessEmail);
         BusinessNameEditText = findViewById(R.id.BusinessNameEditText);
         Context context = MainActivity.this;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
         businessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

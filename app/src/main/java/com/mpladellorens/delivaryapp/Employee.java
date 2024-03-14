@@ -7,7 +7,7 @@ public class Employee implements Serializable {
     private String surname;
     private String phone;
     private String email;
-    private boolean isAdmin;
+
 
     // Required empty constructor for Firestore
     public Employee() {}
@@ -17,7 +17,7 @@ public class Employee implements Serializable {
         this.surname = surname;
         this.phone = phone;
         this.email = email;
-        this.isAdmin = isAdmin;
+
     }
 
     // Getter methods
@@ -25,5 +25,5 @@ public class Employee implements Serializable {
     public String getSurname() { return surname; }
     public String getPhone() { return phone; }
     public String getEmail() { return email; }
-    public boolean isAdmin() { return isAdmin; }
+
 }

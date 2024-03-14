@@ -78,11 +78,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/RestaurantButton"
+        android:id="@+id/sellPointsButton"
         android:layout_width="268dp"
         android:layout_height="74dp"
         android:layout_marginTop="28dp"
-        android:text="Restaurant List"
+        android:text="Sell Points"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="@+id/EmployeesButton"
         app:layout_constraintStart_toStartOf="@+id/EmployeesButton"
@@ -96,9 +96,9 @@
         android:text="Product List"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/RestaurantButton"
-        app:layout_constraintStart_toStartOf="@+id/RestaurantButton"
-        app:layout_constraintTop_toBottomOf="@+id/RestaurantButton" />
+        app:layout_constraintEnd_toEndOf="@+id/sellPointsButton"
+        app:layout_constraintStart_toStartOf="@+id/sellPointsButton"
+        app:layout_constraintTop_toBottomOf="@+id/sellPointsButton" />
 
     <Button
         android:id="@+id/RouteButton"
