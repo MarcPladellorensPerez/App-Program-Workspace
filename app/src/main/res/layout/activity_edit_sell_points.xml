@@ -11,7 +11,7 @@
         android:id="@+id/textView52"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:text="Description"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -23,7 +23,7 @@
         android:id="@+id/textView68"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:text="Location"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -63,12 +63,27 @@
         app:layout_constraintStart_toStartOf="@+id/textView55"
         app:layout_constraintTop_toBottomOf="@+id/textView55" />
 
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="259dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="40dp"
+        android:background="@color/white"
+        android:ems="10"
+        android:hint="Location"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView68"
+        app:layout_constraintTop_toBottomOf="@+id/textView68" />
+
     <TextView
         android:id="@+id/textView55"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="Name"
         android:textColor="@color/white"
         android:textSize="16sp"
@@ -110,7 +125,7 @@
         android:layout_width="140dp"
         android:layout_height="47dp"
         android:layout_marginStart="92dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="12dp"
         android:text="Save"
         app:layout_constraintStart_toStartOf="@+id/descriptionEditText"
         app:layout_constraintTop_toBottomOf="@+id/mapView" />
@@ -119,10 +134,20 @@
         android:id="@+id/mapView"
         android:layout_width="328dp"
         android:layout_height="205dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="92dp"
         app:layout_constraintEnd_toEndOf="@+id/descriptionEditText"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/descriptionEditText"
         app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="68dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="16dp"
+        android:text="🔍"
+        app:layout_constraintBottom_toBottomOf="@+id/location"
+        app:layout_constraintStart_toEndOf="@+id/location"
+        app:layout_constraintTop_toTopOf="@+id/location" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
