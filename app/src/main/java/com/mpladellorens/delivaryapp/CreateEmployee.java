@@ -1,6 +1,8 @@
 package com.mpladellorens.delivaryapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,10 +57,10 @@ public class CreateEmployee extends AppCompatActivity {
     }
 
     private void createEmployee() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString(getString(R.string.userId_key), null);
 
-        if (currentUser != null) {
-            String userId = currentUser.getUid();
+        if (userId != null) {
             Log.d("Firestore", "Business document ID: " + userId);
 
             String name = nameEditText.getText().toString().trim();
@@ -67,10 +69,15 @@ public class CreateEmployee extends AppCompatActivity {
             String phone = phoneEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
             String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+
             boolean isAdmin = admin.isChecked();
 
             if (!password.equals(confirmPassword)) {
                 Toast.makeText(CreateEmployee.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(CreateEmployee.this, "Email or password cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
 

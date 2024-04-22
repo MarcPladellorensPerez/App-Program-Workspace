@@ -1,7 +1,5 @@
 package com.mpladellorens.delivaryapp;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,10 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -42,7 +38,7 @@ private List<route> routes;
         // Get the Employee from the Intent
         Intent intent = getIntent();
         Employee employee = (Employee) intent.getSerializableExtra("EXTRA_EMPLOYEE");
-
+        Log.d("employee", employee.toString());
         // Initialize your views
         Button saveButton = findViewById(R.id.Save);
 
@@ -55,6 +51,7 @@ private List<route> routes;
         surnameEditText.setText(employee.getSurname());
         phoneEditText.setText(employee.getPhone());
         emailEditText.setText(employee.getEmail());
+        String firstMail = emailEditText.getText().toString();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -66,11 +63,11 @@ private List<route> routes;
                 DocumentSnapshot businessDocument = task.getResult();
                 if (businessDocument.exists()) {
                     List<String> routeIds = (List<String>) businessDocument.get("routes");
-
                     if (!routeIds.isEmpty()) {
                         userDocId = intent.getStringExtra("EXTRA_USER_DOC_ID"); // Retrieve the document ID
 
                         CollectionReference routesRef = db.collection("Routes");
+
                         routesRef.whereIn(FieldPath.documentId(), routeIds).get().addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 Map<String, route> routeMap = new HashMap<>();
@@ -99,10 +96,8 @@ private List<route> routes;
                                         if (employeeDocument.exists()) {
                                             List<String> checkedIds = (List<String>) employeeDocument.get("routes");
 
-                                            adapter = new RouteAdapter(new ArrayList<>(), routeIds, userDocId, checkedIds);
+                                            adapter = new RouteAdapter(new ArrayList<>(), routeIds, userDocId, checkedIds, R.layout.item);
                                             routeIdsRecyclerView.setAdapter(adapter);
-
-
                                             adapter.updateData(routes);
                                         }
                                     }
@@ -116,9 +111,21 @@ private List<route> routes;
     }
 
 // Set an OnClickListener for the save button
+        // Set an OnClickListener for the save button
         saveButton.setOnClickListener(v -> {
-            if (adapter != null) {
+            // Get the updated name, email, and surname from the EditTexts
+            String updatedName = nameEditText.getText().toString();
+            String updatedSurname = surnameEditText.getText().toString();
+            String updatedEmail = emailEditText.getText().toString();
+            String updatedPhone = phoneEditText.getText().toString();
 
+            // Check if the email or password is empty
+            if(updatedEmail.isEmpty()) {
+                Toast.makeText(EditUserActivity.this, "Email cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (adapter != null) {
                 // Get the document reference
                 DocumentReference employeeRef = db.collection("Employees").document(userDocId);
 
@@ -134,12 +141,8 @@ private List<route> routes;
                         }
                     }
                 }
+                Log.d("itemChecked status 2", adapter.itemCheckedStatus.toString());
 
-                // Get the updated name, email, and surname from the EditTexts
-                String updatedName = nameEditText.getText().toString();
-                String updatedSurname = surnameEditText.getText().toString();
-                String updatedEmail = emailEditText.getText().toString();
-                String updatedPhone = phoneEditText.getText().toString();
 
                 // Create a map of fields to update
                 Map<String, Object> updates = new HashMap<>();
@@ -149,7 +152,18 @@ private List<route> routes;
                 updates.put("email", updatedEmail);
                 updates.put("phone", updatedPhone);
 
+                userDocId = intent.getStringExtra("EXTRA_USER_DOC_ID"); // Retrieve the document ID
 
+                FirebaseUser user2 = FirebaseAuth.getInstance().getCurrentUser();
+                Log.d("user", user2.toString());
+                if (user2 != null && !updatedEmail.isEmpty()) {
+                    user2.updateEmail(updatedEmail)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Log.d("EditUserActivity", "User email address updated.");
+                                }
+                            });
+                }
                 // Update the fields in the document
                 employeeRef.update(updates);
                 Intent employeeListIntent = new Intent(EditUserActivity.this, EmployeesList.class);

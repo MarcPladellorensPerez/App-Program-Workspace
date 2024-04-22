@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class firebaseFetchUtils {
@@ -21,7 +22,9 @@ public class firebaseFetchUtils {
 
     public void fetchBusinessdData(String userLoginId,String listId, FetchDataBusinessCallback callback) {
         DocumentReference businessRef = FirebaseFirestore.getInstance().document("businesses/" + userLoginId);
+
         businessRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -30,10 +33,10 @@ public class firebaseFetchUtils {
                         List<String> idList = (List<String>) document.get(listId);
                         callback.onCallback(idList); // Pass the data to the callback
                     } else {
-                        Log.d("EmployeesList", "No such document for user ID: " + userLoginId);
+                        Log.d("FetchU3213tils", "No such document for user ID: " + userLoginId);
                     }
                 } else {
-                    Log.d("EmployeesList", "Failed to fetch document for user ID: " + userLoginId, task.getException());
+                    Log.d("FetchUtils", "Failed to fetch document for user ID: " + userLoginId, task.getException());
                 }
             }
         });
@@ -77,5 +80,8 @@ public class firebaseFetchUtils {
                 }
             }
         });
+
     }
+
+
 }

@@ -1,90 +1,127 @@
 package com.mpladellorens.delivaryapp;
-import android.content.Context;
+
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.SellPointViewHolder> {
+    private final List<String> userSellPoints;
+    private List<SellPoint> sellPoints;
+    public List<Boolean> itemCheckedStatus; // This list will keep track of the checked status
+    public List<String> sellPointIds;
+    private String employeeId;
+    private int layoutId;
+    private int layoutType;
 
-    private List<SellPoint> sellPointList;
-    private List<String> sellPointIdList; // List to store the IDs
-    private Context context;
+    public SellPointsAdapter(List<SellPoint> sellPoints, List<String> sellPointIds, String employeeId, List<String> checkedIds, int layoutId) {
+        this.sellPoints = sellPoints;
+        this.sellPointIds = sellPointIds;
+        this.employeeId = employeeId;
+        this.userSellPoints = checkedIds;
+        this.layoutId = layoutId;
+        this.layoutType = (layoutId == R.layout.item) ? 1 : 2;
+        this.itemCheckedStatus = new ArrayList<>(Collections.nCopies(sellPoints.size(), false));
+    }
+    public void updateData(List<SellPoint> newSellPointList, List<String> newSellPointIdList) {
+        this.sellPoints.clear();
+        this.sellPoints.addAll(newSellPointList);
 
-    public SellPointsAdapter(List<SellPoint> sellPointList, List<String> sellPointIdList, Context context) {
-        this.sellPointList = sellPointList;
-        this.sellPointIdList = sellPointIdList;
-        this.context = context;
+        this.sellPointIds.clear();
+        this.sellPointIds.addAll(newSellPointIdList);
+        notifyDataSetChanged();
     }
 
-    @NonNull
     @Override
-    public SellPointViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sellpoint_template, parent, false);
-        return new SellPointViewHolder(view);
+    public SellPointViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        return new SellPointViewHolder(view, layoutType, sellPoints);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SellPointViewHolder holder, int position) {
-        SellPoint sellPoint = sellPointList.get(position);
+    public void onBindViewHolder(SellPointViewHolder holder, int position) {
+        SellPoint sellPoint = sellPoints.get(position);
+        holder.sellPointName.setText(sellPoint.getName());
+        if (layoutType == 1) {
+            // Get the document ID of the sell point
+            String sellPointId = sellPointIds.get(position);
+            SellPointIdsSingleton.getInstance().setSellPointIds(sellPointIds);
+            // Remove the OnCheckedChangeListener
+            holder.CheckBox.setOnCheckedChangeListener(null);
 
-        // Set data to the views in the ViewHolder
-        holder.nameTextView.setText(sellPoint.getName());
-        holder.descriptionTextView.setText(sellPoint.getDescription());
+            // Check if the user already has the sell point ID
+            if (userSellPoints != null && userSellPoints.contains(sellPointId)) {
+                // If the user already has the sell point ID, set the checkbox as checked
+                holder.CheckBox.setChecked(true);
+                itemCheckedStatus.set(position, true);
+            } else {
+                holder.CheckBox.setChecked(false);
+                itemCheckedStatus.set(position, false);
+            }
+
+            // Add the OnCheckedChangeListener back
+            holder.CheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                itemCheckedStatus.set(position, isChecked);
+                Log.d("itemCheckedStatus3", itemCheckedStatus.toString());
+
+                // Save itemCheckedStatus to the Singleton
+                CheckedStatusSingleton.getInstance().setItemCheckedStatus(itemCheckedStatus);
+            });
+        } else if (layoutType == 2) {
+            holder.sellPointDescription.setText(sellPoint.getDescription());
+        }
 
     }
+    public List<Boolean> getitemCheckedStatus(){
+        Log.d("AAAAAA", itemCheckedStatus.toString());
+        return itemCheckedStatus;
+
+    }
+
 
     @Override
     public int getItemCount() {
-        return sellPointList.size();
+        return sellPoints.size();
     }
 
-    // Método para actualizar los datos del adaptador
-    public void updateData(List<SellPoint> newSellPointList, List<String> newSellPointIdList) {
-        this.sellPointList.clear();
-        this.sellPointList.addAll(newSellPointList);
+    public static class SellPointViewHolder extends RecyclerView.ViewHolder {
+        TextView sellPointName;
+        TextView sellPointDescription;
+        CheckBox CheckBox;
+        List<SellPoint> sellPoints;
 
-        this.sellPointIdList.clear(); // Assuming you have a sellPointIdList in your adapter
-        this.sellPointIdList.addAll(newSellPointIdList);
-
-        notifyDataSetChanged();
-    }
-    public class SellPointViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        TextView descriptionTextView;
-
-
-        public SellPointViewHolder(@NonNull View itemView) {
+        public SellPointViewHolder(View itemView, int layoutType, List<SellPoint> sellPoints) {
             super(itemView);
-
-            nameTextView = itemView.findViewById(R.id.name);
-            descriptionTextView = itemView.findViewById(R.id.description);
-
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        SellPoint sellPoint = sellPointList.get(position);
-                        String userDocId = sellPointIdList.get(position); // Get the document ID
-
+            this.sellPoints = sellPoints;
+            if (layoutType == 1) {
+                sellPointName = itemView.findViewById(R.id.itemName);
+                CheckBox = itemView.findViewById(R.id.CheckBox);
+            } else if (layoutType == 2) {
+                sellPointName = itemView.findViewById(R.id.name);
+                sellPointDescription = itemView.findViewById(R.id.description);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SellPoint clickedSellPoint = sellPoints.get(getAdapterPosition());
                         Intent intent = new Intent(v.getContext(), editSellPoints.class);
-                        intent.putExtra("EXTRA_SELLPOINT", sellPoint); // Pass the SellPoint object
-                        intent.putExtra("EXTRA_USER_DOC_ID", userDocId); // Pass the document ID
+                        intent.putExtra("EXTRA_SELLPOINT", clickedSellPoint); // Pass the SellPoint object
+                        intent.putExtra("EXTRA_USER_DOC_ID", clickedSellPoint.getId()); // Pass the document ID
+                        Log.d("sellPointOnclick",clickedSellPoint.getId());
                         v.getContext().startActivity(intent);
                     }
-                }
-            });
-
+                });
+            }
         }
+
 
     }
 

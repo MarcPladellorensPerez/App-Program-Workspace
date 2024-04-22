@@ -22,13 +22,11 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         Context context = MainMenu.this;
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                getString(R.string.preference_file_name), Context.MODE_PRIVATE);
 
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.userId_key), FirebaseAuth.getInstance().getCurrentUser().getUid());
-        editor.apply();
-         employeesButton = findViewById(R.id.EmployeesButton);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
+        String userLoginId = sharedPreferences.getString(getString(R.string.userId_key), null);
+
+        employeesButton = findViewById(R.id.EmployeesButton);
 
          sellPointsButton = findViewById(R.id.sellPointsButton);
          routeButton = findViewById(R.id.RouteButton);
@@ -45,6 +43,14 @@ public class MainMenu extends AppCompatActivity {
             public void onClick(View view) {
                 // Start EmployeesList activity
                 Intent intent = new Intent(MainMenu.this, SellPointsList.class);
+                startActivity(intent);
+            }
+        });
+        routeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Start EmployeesList activity
+                Intent intent = new Intent(MainMenu.this, RouteList.class);
                 startActivity(intent);
             }
         });

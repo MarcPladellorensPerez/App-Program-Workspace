@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +20,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
@@ -31,6 +34,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -38,6 +42,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -72,45 +77,62 @@ public class editSellPoints extends AppCompatActivity {
         Intent intent = getIntent();
         SellPoint sellPoint = (SellPoint) intent.getSerializableExtra("EXTRA_SELLPOINT");
 
+        // Retrieve the SellPoint ID from the Intent
+        String sellPointId = intent.getStringExtra("EXTRA_USER_DOC_ID");
+
+        // Check if it's a new SellPoint
+        boolean isNewSellPoint = sellPoint == null;
+        if (isNewSellPoint) {
+            sellPoint = new SellPoint();
+        }
+
         // Initialize your views
         Button saveButton = findViewById(R.id.SaveSellPoint);
         EditText nameEditText = findViewById(R.id.sellPointNameEditText);
         EditText descriptionEditText = findViewById(R.id.descriptionEditText);
 
         // Set the views with the SellPoint data
-        nameEditText.setText(sellPoint.getName());
-        descriptionEditText.setText(sellPoint.getDescription());
+        if (!isNewSellPoint) {
+            nameEditText.setText(sellPoint.getName());
+            descriptionEditText.setText(sellPoint.getDescription());
+        }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Once the map is ready, move the camera to the user's location
-        final LatLng[] sellPointLocation = new LatLng[1];
+        final List<LatLng> sellPointLocation = new ArrayList<>();
+        sellPointLocation.add(new LatLng(41.7245, 1.8255)); // Manresa, Spain
 
-        mapView.getMapAsync(map -> {
-            this.googleMap = map;
-            // Get the SellPoint location from the Intent
+        // If it's not a new SellPoint, get the location from the SellPoint
+        if (!isNewSellPoint) {
             double sellPointLatitude = sellPoint.getLatitude();
             double sellPointLongitude = sellPoint.getLongitude();
-            sellPointLocation[0] = new LatLng(sellPointLatitude, sellPointLongitude);
+            sellPointLocation.set(0, new LatLng(sellPointLatitude, sellPointLongitude));
+        }
+
+        SellPoint finalSellPoint = sellPoint;
+        mapView.getMapAsync(map -> {
+            this.googleMap = map;
 
             // Add a marker at the SellPoint location
-            MarkerOptions markerOptions = new MarkerOptions().position(sellPointLocation[0]).title(sellPoint.getName());
+            MarkerOptions markerOptions = new MarkerOptions().position(sellPointLocation.get(0)).title(finalSellPoint.getName());
             marker = map.addMarker(markerOptions);
 
             // Move the camera to the SellPoint location
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sellPointLocation[0], 15));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sellPointLocation.get(0), 15));
 
             // Set a click listener for the map
             map.setOnMapClickListener(latLng -> {
                 // Update the marker position
                 marker.setPosition(latLng);
                 // Update the SellPoint location
-                sellPointLocation[0] = latLng;
+                sellPointLocation.set(0, latLng);
             });
 
+
             saveButton.setOnClickListener(v -> {
-                String userDocId = intent.getStringExtra("EXTRA_USER_DOC_ID");
-                DocumentReference sellPointRef = db.collection("SellPoints").document(userDocId);
+                SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
+                String userDocId = sharedPref.getString(getString(R.string.userId_key), null);
 
                 // Get the updated name and description from the EditTexts
                 String updatedName = nameEditText.getText().toString();
@@ -120,15 +142,40 @@ public class editSellPoints extends AppCompatActivity {
                 Map<String, Object> updates = new HashMap<>();
                 updates.put("name", updatedName);
                 updates.put("description", updatedDescription);
-                updates.put("latitude", sellPointLocation[0].latitude);
-                updates.put("longitude", sellPointLocation[0].longitude);
+                updates.put("latitude", sellPointLocation.get(0).latitude);
+                updates.put("longitude", sellPointLocation.get(0).longitude);
 
-                sellPointRef.update(updates);
+                // If it's a new SellPoint, add it to the database
+                if (isNewSellPoint) {
+                    db.collection("SellPoints").add(updates).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            String newSellPointId = documentReference.getId();
+
+                            // Get a reference to the 'business' document for the current user
+                            DocumentReference businessRef = db.collection("businesses").document(userDocId);
+
+                            // Add the new SellPoint ID to the 'salePointsIds' array
+                            businessRef.update("salePointsIds", FieldValue.arrayUnion(newSellPointId));
+                        }
+                    });
+                } else {
+                    // Ensure sellPointId is not null before updating
+                    if (sellPointId != null) {
+                        DocumentReference sellPointRef = db.collection("SellPoints").document(sellPointId);
+                        sellPointRef.update(updates);
+                    } else {
+                        // Handle the case where sellPointId is null
+                        Log.d("editSellPoints", "sellPointId is null");
+                    }
+                }
+
                 Intent sellPointListIntent = new Intent(editSellPoints.this, SellPointsList.class);
                 startActivity(sellPointListIntent);
                 finish();
             });
         });
+
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +222,7 @@ public class editSellPoints extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();

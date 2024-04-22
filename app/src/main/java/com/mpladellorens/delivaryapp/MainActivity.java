@@ -126,7 +126,15 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d("TAG", "Login successful");
                             Intent intent = new Intent(MainActivity.this, MainMenu.class);
+
+                            SharedPreferences sharedPref = context.getSharedPreferences(
+                                    getString(R.string.preference_file_name), Context.MODE_PRIVATE);
+
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString(getString(R.string.userId_key), FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            editor.apply();
                             startActivity(intent);
+
                         } else {
                             Log.e("TAG", "Login not successful", task.getException());
                         }

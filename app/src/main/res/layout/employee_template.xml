@@ -43,12 +43,27 @@
         android:id="@+id/surname"
         android:layout_width="102dp"
         android:layout_height="31dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="16dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/Name"
         app:layout_constraintStart_toEndOf="@+id/Name"
         app:layout_constraintTop_toTopOf="@+id/Name"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <CheckBox
+        android:id="@+id/checkBox2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="108dp"
+        android:shadowColor="#FFFFFF"
+        android:textColor="#FFFFFF"
+        android:textColorHighlight="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/surname"
+        app:layout_constraintTop_toTopOf="@+id/Telephone"
         app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
