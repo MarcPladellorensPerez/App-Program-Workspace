@@ -1,11 +1,13 @@
 package com.mpladellorens.delivaryapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -22,9 +24,10 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     private List<Employee> employeeList;
     private List<String> employeeIdList;
     private Context context;
-    private boolean isSelectionMode = false;
+    boolean isSelectionMode = false;
     private List<Boolean> selectionStatus;
     boolean selectionMode = false;
+
 
 
     public EmployeeAdapter(List<Employee> employeeList, List<String> employeeIdList, Context context,RecyclerView recyclerView) {
@@ -60,10 +63,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         } else {
             checkBox.setVisibility(View.GONE);
         }
-        holder.itemView.setOnLongClickListener(v -> {
-            ((EmployeesList) context).setSelectionMode(true);
-            return true;
-        });
+        holder.checkBox.setVisibility(isSelectionMode ? View.VISIBLE : View.GONE);
+
     }
 
     @Override
@@ -87,23 +88,23 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     public void enterSelectionMode() {
         isSelectionMode = true;
         notifyDataSetChanged();
+
+        // Show the confirm button
+        Button confirmButton = ((Activity) context).findViewById(R.id.confirmButton);
+        confirmButton.setVisibility(View.VISIBLE);
     }
 
     public void exitSelectionMode() {
         isSelectionMode = false;
         selectionStatus = new ArrayList<>(Collections.nCopies(employeeList.size(), false));
         notifyDataSetChanged();
+
+        // Hide the confirm button
+        Button confirmButton = ((Activity) context).findViewById(R.id.confirmButton);
+        confirmButton.setVisibility(View.GONE);
     }
 
-    public List<Employee> getSelectedItems() {
-        List<Employee> selectedItems = new ArrayList<>();
-        for (int i = 0; i < employeeList.size(); i++) {
-            if (selectionStatus.get(i)) {
-                selectedItems.add(employeeList.get(i));
-            }
-        }
-        return selectedItems;
-    }
+
 
     public class EmployeeViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;

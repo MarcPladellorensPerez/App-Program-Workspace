@@ -60,5 +60,22 @@
             android:text="+"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+        <Button
+            android:id="@+id/deleteSellPoints"
+            android:layout_width="93dp"
+            android:layout_height="55dp"
+            android:text="DeleteMode"
+            app:layout_constraintStart_toEndOf="@+id/textView21"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/ConfirmDeleteSellPoints"
+            android:layout_width="101dp"
+            android:layout_height="48dp"
+            android:text="Confirm"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ public class EmployeesList extends AppCompatActivity {
         recyclerView = findViewById(R.id.RecycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         confirmButton = findViewById(R.id.confirmButton);
+        Button eliminarButton = findViewById(R.id.Eliminar);
 
         // Initialize the adapter with an empty list at the beginning
         employeeAdapter = new EmployeeAdapter(new ArrayList<>(), new ArrayList<>(), EmployeesList.this, recyclerView);
@@ -60,37 +62,56 @@ public class EmployeesList extends AppCompatActivity {
             }
 
         });
+        eliminarButton.setOnClickListener(v -> {
+            if(!employeeAdapter.isSelectionMode) {
+                employeeAdapter.enterSelectionMode();
+            }else{
+                employeeAdapter.exitSelectionMode();
+            }
+        });
         findViewById(R.id.confirmButton).setOnClickListener(v -> {
-                    List<String> checkedItemIds = employeeAdapter.getCheckedItemIds();
-                    deleteUtils deleteUtils = new deleteUtils(EmployeesList.this);
-                    deleteUtils.deleteData(checkedItemIds, "Employees","EmployeesIds" , false,false,new deleteUtils.DeleteDataCallback(){
-                        @Override
-                        public void onCallback() {
-
-                        }
-
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // After deleting the data, fetch the updated list
-                            fetchUtils.fetchBusinessdData(userLoginId, "EmployeesIds", new firebaseFetchUtils.FetchDataBusinessCallback() {
+            List<String> checkedItemIds = employeeAdapter.getCheckedItemIds();
+            if(checkedItemIds.isEmpty()) {
+                employeeAdapter.exitSelectionMode();
+            }
+            else if (!checkedItemIds.isEmpty()) {
+                new AlertDialog.Builder(EmployeesList.this)
+                        .setTitle("Confirmation")
+                        .setMessage("Are you sure you want to delete the selected items?")
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            deleteUtils deleteUtils = new deleteUtils(EmployeesList.this);
+                            deleteUtils.deleteData(checkedItemIds, "Employees","EmployeesIds" , false,false,new deleteUtils.DeleteDataCallback(){
                                 @Override
-                                public void onCallback(List<String> employeeIds) {
-                                    fetchUtils.fetchFieldData(employeeIds, "Employees", Employee.class, new firebaseFetchUtils.FetchDataFieldCallback<Employee>() {
+                                public void onCallback() {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // After deleting the data, fetch the updated list
+                                    fetchUtils.fetchBusinessdData(userLoginId, "EmployeesIds", new firebaseFetchUtils.FetchDataBusinessCallback() {
                                         @Override
-                                        public void onCallback(List<Employee> itemList, List<String> itemIdList) {
-                                            // Update the adapter inside the callback function
-                                            employeeAdapter.updateData(itemList, itemIdList);
-                                            employeeAdapter.notifyDataSetChanged();
+                                        public void onCallback(List<String> employeeIds) {
+                                            fetchUtils.fetchFieldData(employeeIds, "Employees", Employee.class, new firebaseFetchUtils.FetchDataFieldCallback<Employee>() {
+                                                @Override
+                                                public void onCallback(List<Employee> itemList, List<String> itemIdList) {
+                                                    // Update the adapter inside the callback function
+                                                    employeeAdapter.updateData(itemList, itemIdList);
+                                                    employeeAdapter.notifyDataSetChanged();
+                                                }
+                                            });
                                         }
                                     });
+                                    employeeAdapter.exitSelectionMode();
+
                                 }
                             });
-                            setSelectionMode(false);
-                        }
-                    });
-                });
-
-
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
         // Set OnClickListener for the CreateEmployeeButton
         findViewById(R.id.CreateEmployee).setOnClickListener(v -> {
             // Launch the CreateEmployee activity
@@ -106,16 +127,6 @@ public class EmployeesList extends AppCompatActivity {
         Intent intent = new Intent(this, MainMenu.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // This flag ensures that all the activities on top of the MainActivity are finished.
         startActivity(intent);
-    }
-    void setSelectionMode(boolean selectionMode) {
-        employeeAdapter.selectionMode = selectionMode;
-        employeeAdapter.notifyDataSetChanged();
-
-        if (selectionMode) {
-            confirmButton.setVisibility(View.VISIBLE);
-        } else {
-            confirmButton.setVisibility(View.GONE);
-        }
     }
 
 }

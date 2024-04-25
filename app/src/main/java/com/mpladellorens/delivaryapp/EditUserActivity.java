@@ -94,7 +94,7 @@ private List<route> routes;
                                     if (task2.isSuccessful()) {
                                         DocumentSnapshot employeeDocument = task2.getResult();
                                         if (employeeDocument.exists()) {
-                                            List<String> checkedIds = (List<String>) employeeDocument.get("routes");
+                                            List<String> checkedIds = (List<String>) employeeDocument.get("routesIds");
 
                                             adapter = new RouteAdapter(new ArrayList<>(), routeIds, userDocId, checkedIds, R.layout.item);
                                             routeIdsRecyclerView.setAdapter(adapter);
@@ -138,15 +138,16 @@ private List<route> routes;
                     for (int i = 0; i < adapter.itemCheckedStatus.size(); i++) {
                         if (adapter.itemCheckedStatus.get(i)) {
                             checkedRoutes.add(adapter.routeIds.get(i));
+                            Log.d("try", adapter.itemCheckedStatus.toString());
                         }
                     }
                 }
                 Log.d("itemChecked status 2", adapter.itemCheckedStatus.toString());
-
+                Log.d("itemChecked status 2", adapter.routeIds.toString());
 
                 // Create a map of fields to update
                 Map<String, Object> updates = new HashMap<>();
-                updates.put("routes", checkedRoutes);
+                updates.put("routesIds", checkedRoutes);
                 updates.put("name", updatedName);
                 updates.put("surname", updatedSurname);
                 updates.put("email", updatedEmail);

@@ -1,10 +1,13 @@
 package com.mpladellorens.delivaryapp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -16,14 +19,19 @@ import java.util.List;
 
 public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.SellPointViewHolder> {
     private final List<String> userSellPoints;
+    private final Context context;
     private List<SellPoint> sellPoints;
     public List<Boolean> itemCheckedStatus; // This list will keep track of the checked status
+    public List<Boolean> itemCheckedStatus2;
     public List<String> sellPointIds;
     private String employeeId;
     private int layoutId;
     private int layoutType;
+    public boolean deleteMode =false;
+    private final RecyclerView recyclerView;
 
-    public SellPointsAdapter(List<SellPoint> sellPoints, List<String> sellPointIds, String employeeId, List<String> checkedIds, int layoutId) {
+
+    public SellPointsAdapter(List<SellPoint> sellPoints, List<String> sellPointIds, String employeeId, List<String> checkedIds, int layoutId, Context context, RecyclerView recyclerView) {
         this.sellPoints = sellPoints;
         this.sellPointIds = sellPointIds;
         this.employeeId = employeeId;
@@ -31,14 +39,20 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
         this.layoutId = layoutId;
         this.layoutType = (layoutId == R.layout.item) ? 1 : 2;
         this.itemCheckedStatus = new ArrayList<>(Collections.nCopies(sellPoints.size(), false));
+        this.itemCheckedStatus2 = new ArrayList<>(Collections.nCopies(sellPoints.size(), false));
+        this.context = context;
+        this.recyclerView = recyclerView;  // Initialize recyclerView here
+        Log.d("aksjlkagsjhkjhb",itemCheckedStatus2.toString());
     }
     public void updateData(List<SellPoint> newSellPointList, List<String> newSellPointIdList) {
         this.sellPoints.clear();
         this.sellPoints.addAll(newSellPointList);
-
         this.sellPointIds.clear();
         this.sellPointIds.addAll(newSellPointIdList);
+        itemCheckedStatus2 = new ArrayList(Collections.nCopies(newSellPointList.size(), false));
+
         notifyDataSetChanged();
+        Log.d("aksjlkagsjhkjhb",itemCheckedStatus2.toString());
     }
 
     @Override
@@ -78,14 +92,16 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
             });
         } else if (layoutType == 2) {
             holder.sellPointDescription.setText(sellPoint.getDescription());
+            holder.checkBox3.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                itemCheckedStatus2.set(position, isChecked);
+                CheckedItemsSingleton.getInstance().setItemCheckedStatus2(itemCheckedStatus2);
+                Log.d("itemCheckedStatus3", itemCheckedStatus2.toString());
+            });
+
         }
 
     }
-    public List<Boolean> getitemCheckedStatus(){
-        Log.d("AAAAAA", itemCheckedStatus.toString());
-        return itemCheckedStatus;
 
-    }
 
 
     @Override
@@ -96,6 +112,7 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
     public static class SellPointViewHolder extends RecyclerView.ViewHolder {
         TextView sellPointName;
         TextView sellPointDescription;
+        CheckBox checkBox3;
         CheckBox CheckBox;
         List<SellPoint> sellPoints;
 
@@ -108,6 +125,7 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
             } else if (layoutType == 2) {
                 sellPointName = itemView.findViewById(R.id.name);
                 sellPointDescription = itemView.findViewById(R.id.description);
+                checkBox3 = itemView.findViewById(R.id.checkBox3);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -124,5 +142,37 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
 
 
     }
+    public void enterDeleteMode() {
+        deleteMode = true;
 
+        // Show the confirm button
+        Button confirmButton = ((Activity) context).findViewById(R.id.ConfirmDeleteSellPoints);
+        confirmButton.setVisibility(View.VISIBLE);
+
+        // Show the checkboxes
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            View itemView = recyclerView.getChildAt(i);
+            CheckBox checkBox = itemView.findViewById(R.id.checkBox3);
+            checkBox.setVisibility(View.VISIBLE);
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void exitDeleteMode() {
+        deleteMode = false;
+
+        // Hide the confirm button
+        Button confirmButton = ((Activity) context).findViewById(R.id.ConfirmDeleteSellPoints);
+        confirmButton.setVisibility(View.GONE);
+
+        // Hide the checkboxes
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            View itemView = recyclerView.getChildAt(i);
+            CheckBox checkBox = itemView.findViewById(R.id.checkBox3);
+            checkBox.setVisibility(View.GONE);
+        }
+
+        notifyDataSetChanged();
+    }
 }

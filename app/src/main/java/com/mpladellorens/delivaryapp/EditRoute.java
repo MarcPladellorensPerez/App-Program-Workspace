@@ -60,8 +60,7 @@ public class EditRoute extends AppCompatActivity {
         // Create an instance of RouteAdapter with initial empty data
         List<String> userRoutes = new ArrayList<>();
         String employeeId = "";
-        SellPointsAdapter adapter = new SellPointsAdapter(new ArrayList<>(), new ArrayList<>(), employeeId, userRoutes, R.layout.item);
-
+        SellPointsAdapter adapter = new SellPointsAdapter(new ArrayList<>(), new ArrayList<>(), employeeId, userRoutes, R.layout.item, this,recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
@@ -93,7 +92,7 @@ public class EditRoute extends AppCompatActivity {
                                 }
 
                                 // Create an instance of SellPointsAdapter with the fetched sell points and checked IDs
-                                SellPointsAdapter adapter = new SellPointsAdapter(sellPointList, sellPointIdList, employeeId, checkedIds, R.layout.item);
+                                SellPointsAdapter adapter = new SellPointsAdapter(sellPointList, sellPointIdList, employeeId, checkedIds, R.layout.item,EditRoute.this,recyclerView);
 
                                 recyclerView.setAdapter(adapter);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(EditRoute.this));
