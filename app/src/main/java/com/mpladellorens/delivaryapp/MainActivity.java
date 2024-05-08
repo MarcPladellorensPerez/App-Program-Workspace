@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 String email = userEmailEditText.getText().toString();
                 String password = userPasswordEditText.getText().toString();
                 Log.d("TAG", "click");
-                authUtilities.loginEmployee(businessName, email, password, new OnCompleteListener<AuthResult>() {
+                authUtilities.logInEmployee(email, businessName, password, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {

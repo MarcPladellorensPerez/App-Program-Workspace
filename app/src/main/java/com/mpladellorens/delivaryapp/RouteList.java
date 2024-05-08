@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -29,6 +28,9 @@ public class RouteList extends AppCompatActivity {
     private RouteAdapter routeAdapter;
     private String userLoginId;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Button deleteRoutes;
+    Button ConfirmDeleteRoutes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +39,11 @@ public class RouteList extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.RouteIds);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ConfirmDeleteRoutes = findViewById(R.id.ConfirmDeleteRoutes);
+        deleteRoutes = findViewById(R.id.deleteRoutes);
 
         // Initialize the adapter with an empty list at the beginning
-        routeAdapter = new RouteAdapter(new ArrayList<>(), new ArrayList<>(), "string", new ArrayList<>(), R.layout.route);
+        routeAdapter = new RouteAdapter(new ArrayList<>(), new ArrayList<>(), "string", new ArrayList<>(), R.layout.route,RouteList.this, recyclerView);
         recyclerView.setAdapter(routeAdapter);
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
@@ -88,7 +92,7 @@ public class RouteList extends AppCompatActivity {
                                 routeIdsRecyclerView.setLayoutManager(new LinearLayoutManager(RouteList.this));
 
                                 List<String> checkedIds= new ArrayList<>();
-                                routeAdapter = new RouteAdapter(new ArrayList<>(), routeIds, userLoginId, checkedIds, R.layout.route);
+                                routeAdapter = new RouteAdapter(new ArrayList<>(), routeIds, userLoginId, checkedIds, R.layout.route,RouteList.this, recyclerView);
                                 routeIdsRecyclerView.setAdapter(routeAdapter);
                                 routeAdapter.updateData(routes);
                             }
@@ -104,7 +108,69 @@ public class RouteList extends AppCompatActivity {
             Intent intent = new Intent(RouteList.this, EditRoute.class);
             startActivity(intent);
         });
+        deleteRoutes.setOnClickListener(v -> {
+            if (routeAdapter.deleteMode){
+                routeAdapter.exitDeleteMode();
+            } else {
+                routeAdapter.enterDeleteMode();
+            }
+        });
+
+        ConfirmDeleteRoutes.setOnClickListener(v -> {
+
+            // Get the checked status of each item from the singleton
+            List<Boolean> checkedItems = CheckedItemsSingleton.getInstance().getItemCheckedStatus2();
+            Log.d("AAAA", CheckedItemsSingleton.getInstance().getItemCheckedStatus2().toString());
+            // Get the IDs of the checked items
+            List<String> checkedIds = new ArrayList<>();
+            for (int i = 0; i < checkedItems.size(); i++) {
+                if (checkedItems.get(i)) {  // If the item is checked
+                    checkedIds.add(routeAdapter.routeIds.get(i));  // Add its ID to the list
+                }
+            }
+            if (checkedIds.isEmpty()) {
+                routeAdapter.exitDeleteMode();
+                return;
+            }
+
+            // Print the IDs of the checked items
+            Log.d("CheckedItems", "IDs of checked items: " + checkedIds.toString());
+
+            // Create an instance of deleteUtils
+            Context context = this;
+            deleteUtils deleteUtilsInstance = new deleteUtils(context);
+
+            // Call the deleteData method
+            deleteUtilsInstance.deleteData(checkedIds, "Routes", "routes", false, true, new deleteUtils.DeleteDataCallback() {
+                @Override
+                public void onCallback() {
+                    Log.d("DeleteData", "Data deletion successful");
+                }
+
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("DeleteData", "Data deletion successful");
+
+                    // After deleting the data, fetch the updated list
+                    fetchUtils.fetchBusinessdData(userLoginId, "routes", new firebaseFetchUtils.FetchDataBusinessCallback() {
+                        @Override
+                        public void onCallback(List<String> routeIds) {
+                            fetchUtils.fetchFieldData(routeIds, "Routes", route.class, new firebaseFetchUtils.FetchDataFieldCallback<route>() {
+                                @Override
+                                public void onCallback(List<route> itemList, List<String> itemIdList) {
+                                    // Update the adapter inside the callback function
+                                    routeAdapter.updateData(itemList);
+                                    routeAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    });
+                    routeAdapter.exitDeleteMode();
+                }
+            });
+        });
     }
+
     @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
@@ -134,5 +200,6 @@ public class RouteList extends AppCompatActivity {
             }
         });
     }
+
 
 }

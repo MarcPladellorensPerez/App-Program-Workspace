@@ -96,7 +96,7 @@ private List<route> routes;
                                         if (employeeDocument.exists()) {
                                             List<String> checkedIds = (List<String>) employeeDocument.get("routesIds");
 
-                                            adapter = new RouteAdapter(new ArrayList<>(), routeIds, userDocId, checkedIds, R.layout.item);
+                                            adapter = new RouteAdapter(new ArrayList<>(), routeIds, userDocId, checkedIds, R.layout.item,EditUserActivity.this, routeIdsRecyclerView);
                                             routeIdsRecyclerView.setAdapter(adapter);
                                             adapter.updateData(routes);
                                         }

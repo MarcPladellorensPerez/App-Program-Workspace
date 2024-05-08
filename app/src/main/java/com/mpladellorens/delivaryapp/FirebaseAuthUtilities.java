@@ -1,5 +1,7 @@
 package com.mpladellorens.delivaryapp;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,11 +20,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class FirebaseAuthUtilities {
     private FirebaseFirestore db;
     private CollectionReference businessCollection;
     private FirebaseAuth mAuth;
+    String businessId;
 
     public FirebaseAuthUtilities() {
         db = FirebaseFirestore.getInstance();
@@ -63,51 +67,66 @@ public class FirebaseAuthUtilities {
                     }
                 });
     }
+    public void logInEmployee(String username, String businessName, String password, OnCompleteListener<AuthResult> completeListener) {
+        // First, check if the business name exists
 
+        db.collection("businesses").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        boolean businessExists = false;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (businessName.equals(document.getString("name"))) {
+                                businessExists = true;
+                                businessId = document.getId();
+                                break;
+                            }
+                        }
+                        if (businessExists) {
+                            // Business exists, now check if the user is in Firebase auth
+                            mAuth.signInWithEmailAndPassword(username, password)
+                                    .addOnCompleteListener(authTask -> {
+                                        if (authTask.isSuccessful()) {
+                                            // User is in Firebase auth, now check if the user's ID is inside the business's array of employee IDs
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            if (user != null) {
+                                                String userId = user.getUid();
+                                                DocumentReference businessDocument = db.collection("businesses").document(businessId);
+                                                businessDocument.get()
+                                                        .addOnSuccessListener(documentSnapshot -> {
+                                                            List<String> employeesIds = (List<String>) documentSnapshot.get("EmployeesIds");
+                                                            Log.d("userID", userId);
 
-
-
-
-
-    public void loginEmployee(String businessName, String employeeEmail, String employeePassword, OnCompleteListener<AuthResult> completeListener) {
-        // First, check if the employee exists
-        db.collection("Employees")
-                .whereEqualTo("email", employeeEmail)
-                .get()
-                .addOnCompleteListener(employeeTask -> {
-                    if (employeeTask.isSuccessful() && !employeeTask.getResult().isEmpty()) {
-                        // Employee found, now get the employeeId
-                        String employeeId = employeeTask.getResult().getDocuments().get(0).getId();
-
-                        // Now, check if the business exists
-                        db.collection("businesses")
-                                .whereEqualTo("name", businessName)
-                                .get()
-                                .addOnCompleteListener(businessTask -> {
-                                    if (businessTask.isSuccessful() && !businessTask.getResult().isEmpty()) {
-                                        // Business found, now get the EmployeesIds
-                                        List<String> employeesIds = (List<String>) businessTask.getResult().getDocuments().get(0).get("EmployeesIds");
-
-                                        // Check if the employeeId is in the EmployeesIds
-                                        if (employeesIds != null && employeesIds.contains(employeeId)) {
-                                            // Employee is associated with the business, proceed with the login
-                                            mAuth.signInWithEmailAndPassword(employeeEmail, employeePassword)
-                                                    .addOnCompleteListener(completeListener);
+                                                            Log.d("employeesIds", employeesIds.toString());
+                                                            if (employeesIds != null && employeesIds.contains(userId)) {
+                                                                // User's ID is inside the business's array of employee IDs, log in
+                                                                completeListener.onComplete(authTask);
+                                                            } else {
+                                                                // User's ID is not in the business's array of employee IDs
+                                                                completeListener.onComplete(Tasks.forException(new Exception("User's ID is not in the business's array of employee IDs")));
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> completeListener.onComplete(Tasks.forException(e)));
+                                            } else {
+                                                // User is not in Firebase auth
+                                                completeListener.onComplete(Tasks.forException(new Exception("User is not in Firebase auth")));
+                                            }
                                         } else {
-                                            // Employee is not associated with the business
-                                            completeListener.onComplete(Tasks.forException(new Exception("Employee is not associated with the business")));
+                                            // User is not in Firebase auth
+                                            completeListener.onComplete(Tasks.forException(authTask.getException()));
                                         }
-                                    } else {
-                                        // Business not found
-                                        completeListener.onComplete(Tasks.forException(new Exception("Business not found")));
-                                    }
-                                });
+                                    });
+                        } else {
+                            // Business does not exist
+                            completeListener.onComplete(Tasks.forException(new Exception("Business does not exist")));
+                        }
                     } else {
-                        // Employee not found
-                        completeListener.onComplete(Tasks.forException(new Exception("Employee not found")));
+                        // Failed to read from businesses collection
+                        completeListener.onComplete(Tasks.forException(task.getException()));
                     }
                 });
     }
+
+
     public void loginBusiness(String email, String password, OnCompleteListener<AuthResult> completeListener) {
         // Use Firebase Authentication for business login
         mAuth.signInWithEmailAndPassword(email, password)

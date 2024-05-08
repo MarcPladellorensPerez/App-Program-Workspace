@@ -1,10 +1,13 @@
 package com.mpladellorens.delivaryapp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -27,22 +30,27 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     private int layoutId;
     private int layoutType;
     private List<SellPoint> sellPoints; // Add this line
+    private final RecyclerView recyclerView;
+    public boolean deleteMode = false;
+    private final Context context;  // Add this line
 
-    public RouteAdapter(List<route> routes, List<String> routeIds, String employeeId, List<String> checkedIds, int layoutId) {        this.routes = routes;
+
+    public RouteAdapter(List<route> routes, List<String> routeIds, String employeeId, List<String> checkedIds, int layoutId,Context context, RecyclerView recyclerView) {        this.routes = routes;
         this.routeIds = routeIds;
         this.employeeId = employeeId;
         this.userRoutes = checkedIds;
         this.layoutId = layoutId;
         this.layoutType = (layoutId == R.layout.item) ? 1 : 2;
         this.itemCheckedStatus = new ArrayList<>(Collections.nCopies(routes.size(), false));
-
+        this.context = context;
+        this.recyclerView = recyclerView;
     }
     @Override
     public RouteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
 
         // Pass the routes list to the ViewHolder
-        return new RouteViewHolder(view, layoutType, routes);
+        return new RouteViewHolder(view, layoutType, routes,false);
     }
 
 
@@ -50,6 +58,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     public void onBindViewHolder(RouteViewHolder holder, int position) {
         route route = routes.get(position);
         holder.routeName.setText(route.getName());
+        Log.d("aaaa",itemCheckedStatus.toString());
         if (layoutType == 1) {
             // Get the document ID of the route
             String routeId = routeIds.get(position);
@@ -76,6 +85,14 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         } else if (layoutType == 2) {
             // Assuming that your route class has a getDescription method
             holder.routeDescription.setText(route.getDescription());
+            holder.checkBox4.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                itemCheckedStatus.set(position, isChecked);
+                CheckedItemsSingleton.getInstance().setItemCheckedStatus2(itemCheckedStatus);
+
+                Log.d("itemChecked status", itemCheckedStatus.toString());
+                Log.d("singleton", CheckedItemsSingleton.getInstance().getItemCheckedStatus2().toString());
+
+            });
         }
     }
 
@@ -94,16 +111,23 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         TextView routeDescription;
         CheckBox CheckBox;
         List<route> routes;
+        CheckBox checkBox4;
+        boolean deleteMode;
 
-        public RouteViewHolder(View itemView, int layoutType, List<route> routes) {
+
+        public RouteViewHolder(View itemView, int layoutType, List<route> routes,boolean deleteMode) {
             super(itemView);
             this.routes = routes;
+            this.deleteMode = deleteMode;
+
             if (layoutType == 1) {
                 routeName = itemView.findViewById(R.id.itemName);
                 CheckBox = itemView.findViewById(R.id.CheckBox);
             } else if (layoutType == 2) {
                 routeName = itemView.findViewById(R.id.RouteName);
                 routeDescription = itemView.findViewById(R.id.RouteDescription);
+                checkBox4 = itemView.findViewById(R.id.checkBox4);
+                checkBox4.setVisibility(deleteMode ? View.VISIBLE : View.GONE);
 
                 // Set the click listener for the entire item view
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -133,33 +157,42 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         this.itemCheckedStatus = new ArrayList<>(Collections.nCopies(routes.size(), false));
         notifyDataSetChanged();
     }
-
-
-    public void sortData() {
-        new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
-            // Sort the routes and itemCheckedStatus based on the checkbox status
-            List<Integer> indices = IntStream.range(0, itemCheckedStatus.size())
-                    .boxed()
-                    .sorted(Comparator.comparing(itemCheckedStatus::get).reversed())
-                    .collect(Collectors.toList());
-
-            List<route> sortedRoutes = new ArrayList<>();
-            List<Boolean> sortedItemCheckedStatus = new ArrayList<>();
-
-            for (int index : indices) {
-                sortedRoutes.add(routes.get(index));
-                sortedItemCheckedStatus.add(itemCheckedStatus.get(index));
-            }
-
-            this.routes = sortedRoutes;
-            this.itemCheckedStatus = sortedItemCheckedStatus;
-
-            notifyDataSetChanged();
-        });
-    }
-
     public void updateRouteIds(List<String> newRouteIds) {
         this.routeIds = newRouteIds;
         notifyDataSetChanged();
     }
+    public void enterDeleteMode() {
+        deleteMode = true;
+
+        // Show the checkboxes
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            View itemView = recyclerView.getChildAt(i);
+            CheckBox checkBox = itemView.findViewById(R.id.checkBox4);
+            checkBox.setVisibility(View.VISIBLE);
+        }
+
+        // Show the confirm button
+        Button confirmButton = ((Activity) context).findViewById(R.id.ConfirmDeleteRoutes);
+        confirmButton.setVisibility(View.VISIBLE);
+
+        notifyDataSetChanged();
+    }
+
+    public void exitDeleteMode() {
+        deleteMode = false;
+
+        // Hide the checkboxes
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            View itemView = recyclerView.getChildAt(i);
+            CheckBox checkBox = itemView.findViewById(R.id.checkBox4);
+            checkBox.setVisibility(View.GONE);
+        }
+
+        // Hide the confirm button
+        Button confirmButton = ((Activity) context).findViewById(R.id.ConfirmDeleteRoutes);
+        confirmButton.setVisibility(View.GONE);
+
+        notifyDataSetChanged();
+    }
+
 }

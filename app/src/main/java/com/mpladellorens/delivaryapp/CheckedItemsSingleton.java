@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CheckedItemsSingleton {
     private static CheckedItemsSingleton instance;
-    private List<Boolean> itemCheckedStatus2;
+    public List<Boolean> itemCheckedStatus2;
 
     private CheckedItemsSingleton() {
         itemCheckedStatus2 = new ArrayList<>();

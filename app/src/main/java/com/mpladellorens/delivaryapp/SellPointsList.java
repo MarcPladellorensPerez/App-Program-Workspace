@@ -95,6 +95,11 @@ public class SellPointsList extends AppCompatActivity {
                     checkedIds2.add(SellPointsAdapter.sellPointIds.get(i));  // Add its ID to the list
                 }
             }
+            if (checkedIds2.isEmpty()) {
+                SellPointsAdapter.exitDeleteMode();
+
+                return;
+            }
 
             // Print the IDs of the checked items
             Log.d("CheckedItems", "IDs of checked items: " + checkedIds2.toString());
@@ -113,9 +118,24 @@ public class SellPointsList extends AppCompatActivity {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.d("DeleteData", "Data deletion successful");
+
+                    // After deleting the data, fetch the updated list
+                    fetchUtils.fetchBusinessdData(userLoginId, "salePointsIds", new firebaseFetchUtils.FetchDataBusinessCallback() {
+                        @Override
+                        public void onCallback(List<String> sellRouteIds) {
+                            fetchUtils.fetchFieldData(sellRouteIds, "SellPoints", SellPoint.class, new firebaseFetchUtils.FetchDataFieldCallback<SellPoint>() {
+                                @Override
+                                public void onCallback(List<SellPoint> itemList, List<String> itemIdList) {
+                                    // Update the adapter inside the callback function
+                                    SellPointsAdapter.updateData(itemList, itemIdList);
+                                    SellPointsAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    });
+                    SellPointsAdapter.exitDeleteMode();
                 }
             });
-            SellPointsAdapter.exitDeleteMode();
         });
 
 
@@ -135,6 +155,22 @@ public class SellPointsList extends AppCompatActivity {
         super.onResume();
 
         // Fetch the data again
+        firebaseFetchUtils fetchUtils = new firebaseFetchUtils();
+        fetchUtils.fetchBusinessdData(userLoginId,"salePointsIds", new firebaseFetchUtils.FetchDataBusinessCallback() {
+            @Override
+            public void onCallback(List<String> sellRouteIds) {
+                fetchUtils.fetchFieldData(sellRouteIds, "SellPoints", SellPoint.class, new firebaseFetchUtils.FetchDataFieldCallback<SellPoint>() {
+                    @Override
+                    public void onCallback(List<SellPoint> itemList, List<String> itemIdList) {
+                        // Update the adapter inside the callback function
+                        SellPointsAdapter.updateData(itemList, itemIdList);
+                        SellPointsAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+    }
+    private void refreshData() {
         firebaseFetchUtils fetchUtils = new firebaseFetchUtils();
         fetchUtils.fetchBusinessdData(userLoginId,"salePointsIds", new firebaseFetchUtils.FetchDataBusinessCallback() {
             @Override
