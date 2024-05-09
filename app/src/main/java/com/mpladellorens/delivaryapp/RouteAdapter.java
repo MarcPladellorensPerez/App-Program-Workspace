@@ -56,43 +56,46 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
 
     @Override
     public void onBindViewHolder(RouteViewHolder holder, int position) {
-        route route = routes.get(position);
-        holder.routeName.setText(route.getName());
-        Log.d("aaaa",itemCheckedStatus.toString());
-        if (layoutType == 1) {
-            // Get the document ID of the route
-            String routeId = routeIds.get(position);
 
-            // Remove the OnCheckedChangeListener
-            holder.CheckBox.setOnCheckedChangeListener(null);
+            route route = routes.get(position);
+        if (route != null) {
+            holder.routeName.setText(route.getName());
+            Log.d("aaaa", itemCheckedStatus.toString());
+            if (layoutType == 1) {
+                // Get the document ID of the route
+                String routeId = routeIds.get(position);
 
-            // Check if the user already has the route ID
-            if (userRoutes != null && userRoutes.contains(routeId)) {
-                // If the user already has the route ID, set the checkbox as checked
-                holder.CheckBox.setChecked(true);
-                itemCheckedStatus.set(position, true);
-            } else {
-                holder.CheckBox.setChecked(false);
-                itemCheckedStatus.set(position, false);
+                // Remove the OnCheckedChangeListener
+                holder.CheckBox.setOnCheckedChangeListener(null);
+
+                // Check if the user already has the route ID
+                if (userRoutes != null && userRoutes.contains(routeId)) {
+                    // If the user already has the route ID, set the checkbox as checked
+                    holder.CheckBox.setChecked(true);
+                    itemCheckedStatus.set(position, true);
+                } else {
+                    holder.CheckBox.setChecked(false);
+                    itemCheckedStatus.set(position, false);
+                }
+
+                // Add the OnCheckedChangeListener back
+                holder.CheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    itemCheckedStatus.set(position, isChecked);
+                    Log.d("itemChecked status", itemCheckedStatus.toString());
+
+                });
+            } else if (layoutType == 2) {
+                // Assuming that your route class has a getDescription method
+                holder.routeDescription.setText(route.getDescription());
+                holder.checkBox4.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    itemCheckedStatus.set(position, isChecked);
+                    CheckedItemsSingleton.getInstance().setItemCheckedStatus2(itemCheckedStatus);
+
+                    Log.d("itemChecked status", itemCheckedStatus.toString());
+                    Log.d("singleton", CheckedItemsSingleton.getInstance().getItemCheckedStatus2().toString());
+
+                });
             }
-
-            // Add the OnCheckedChangeListener back
-            holder.CheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                itemCheckedStatus.set(position, isChecked);
-                Log.d("itemChecked status", itemCheckedStatus.toString());
-
-            });
-        } else if (layoutType == 2) {
-            // Assuming that your route class has a getDescription method
-            holder.routeDescription.setText(route.getDescription());
-            holder.checkBox4.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                itemCheckedStatus.set(position, isChecked);
-                CheckedItemsSingleton.getInstance().setItemCheckedStatus2(itemCheckedStatus);
-
-                Log.d("itemChecked status", itemCheckedStatus.toString());
-                Log.d("singleton", CheckedItemsSingleton.getInstance().getItemCheckedStatus2().toString());
-
-            });
         }
     }
 

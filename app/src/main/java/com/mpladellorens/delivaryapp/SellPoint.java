@@ -1,6 +1,7 @@
 package com.mpladellorens.delivaryapp;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SellPoint implements Serializable {
     private String id; // Add this line
@@ -19,4 +20,8 @@ public class SellPoint implements Serializable {
     public String getDescription() { return description; }
     public double getLatitude() { return latitude; }
     public double getLongitude() { return longitude; }
+
+    public String getSellPointIds() {
+        return id;
+    }
 }

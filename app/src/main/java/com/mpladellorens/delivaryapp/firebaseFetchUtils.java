@@ -82,6 +82,27 @@ public class firebaseFetchUtils {
         });
 
     }
+    public void fetchEmployeedData(String userLoginId, FetchDataBusinessCallback callback) {
+        DocumentReference businessRef = FirebaseFirestore.getInstance().document("Employees/" + userLoginId);
+
+        businessRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        List<String> idList = (List<String>) document.get("routesIds");
+                        callback.onCallback(idList); // Pass the data to the callback
+                    } else {
+                        Log.d("FetchU3213tils", "No such document for user ID: " + userLoginId);
+                    }
+                } else {
+                    Log.d("FetchUtils", "Failed to fetch document for user ID: " + userLoginId, task.getException());
+                }
+            }
+        });
+    }
 
 
 }

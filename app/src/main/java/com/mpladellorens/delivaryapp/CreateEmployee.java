@@ -70,7 +70,6 @@ public class CreateEmployee extends AppCompatActivity {
             String password = passwordEditText.getText().toString().trim();
             String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
-            boolean isAdmin = admin.isChecked();
 
             if (!password.equals(confirmPassword)) {
                 Toast.makeText(CreateEmployee.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
@@ -110,7 +109,6 @@ public class CreateEmployee extends AppCompatActivity {
                                             employeeData.put("surname", surname);
                                             employeeData.put("email", email);
                                             employeeData.put("phone", phone);
-                                            employeeData.put("isAdmin", isAdmin);
 
                                             List<String> stringArray = Arrays.asList();
                                             employeeData.put("routesIds", stringArray);

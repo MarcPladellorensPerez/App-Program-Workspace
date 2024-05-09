@@ -83,11 +83,7 @@ public class RouteList extends AppCompatActivity {
                                 for (String routeId : routeIds) {
                                     routes.add(routeMap.get(routeId));
                                 }
-                                for (route item : routes) {
-                                    // Access the id of the route
-                                    String id = item.getId();
-                                    // Continue processing the route item as needed
-                                }
+
                                 RecyclerView routeIdsRecyclerView = findViewById(R.id.RouteIds);
                                 routeIdsRecyclerView.setLayoutManager(new LinearLayoutManager(RouteList.this));
 
