@@ -16,12 +16,14 @@
         android:theme="@style/Theme.DelivaryApp"
         tools:targetApi="31">
         <activity
+            android:name=".RouteStartMenu"
+            android:exported="false" />
+        <activity
             android:name=".EmployeeMainMenu"
             android:exported="false" />
         <activity
             android:name=".EditRoute"
             android:exported="false" />
-
         <activity
             android:name=".RouteList"
             android:exported="false" />

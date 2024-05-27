@@ -103,6 +103,30 @@ public class firebaseFetchUtils {
             }
         });
     }
+    public interface FetchDataListCallback {
+        void onCallback(List<String> list);
+    }
 
+    public void fetchOtherData(String itemId, String collection, String listId, FetchDataListCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection(collection).document(itemId);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        List<String> list = (List<String>) document.get(listId);
+                        callback.onCallback(list); // Pass the data to the callback
+                    } else {
+                        Log.d("FetchUtils", "No such document in collection: " + collection + " with ID: " + itemId);
+                    }
+                } else {
+                    Log.d("FetchUtils", "Failed to fetch document in collection: " + collection + " with ID: " + itemId, task.getException());
+                }
+            }
+        });
+    }
 
 }

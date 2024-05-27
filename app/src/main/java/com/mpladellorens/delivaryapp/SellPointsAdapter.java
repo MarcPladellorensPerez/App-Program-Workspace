@@ -37,7 +37,13 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
         this.employeeId = employeeId;
         this.userSellPoints = checkedIds;
         this.layoutId = layoutId;
-        this.layoutType = (layoutId == R.layout.item) ? 1 : 2;
+        if (this.layoutId == R.layout.item) {
+            this.layoutType = 1;
+        } else if (this.layoutId == R.layout.sellpoint_template) {
+            this.layoutType = 2;
+        } else if (this.layoutId == R.layout.sell_point_start_route) {
+            this.layoutType = 3;
+        }
         this.itemCheckedStatus = new ArrayList<>(Collections.nCopies(sellPoints.size(), false));
         this.itemCheckedStatus2 = new ArrayList<>(Collections.nCopies(sellPoints.size(), false));
         this.context = context;
@@ -98,6 +104,9 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
                 Log.d("itemCheckedStatus3", itemCheckedStatus2.toString());
             });
 
+        } else if(layoutType == 3){
+            holder.sellPointName.setText(sellPoint.getName());
+
         }
 
     }
@@ -137,6 +146,8 @@ public class SellPointsAdapter extends RecyclerView.Adapter<SellPointsAdapter.Se
                         v.getContext().startActivity(intent);
                     }
                 });
+            } else if(layoutType == 3){
+                sellPointName = itemView.findViewById(R.id.SellPointName);
             }
         }
 

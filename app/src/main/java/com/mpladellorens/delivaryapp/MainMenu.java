@@ -2,6 +2,7 @@ package com.mpladellorens.delivaryapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,5 +55,13 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        // After editing or adding an item, when you want to go back to the main menu
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // This flag ensures that all the activities on top of the MainActivity are finished.
+        startActivity(intent);
     }
 }

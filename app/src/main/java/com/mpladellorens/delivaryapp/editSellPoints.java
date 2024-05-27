@@ -125,8 +125,8 @@ public class editSellPoints extends AppCompatActivity {
             map.setOnMapClickListener(latLng -> {
                 // Update the marker position
                 marker.setPosition(latLng);
-                // Update the SellPoint location
-                sellPointLocation.set(0, latLng);
+                // Add the new LatLng to the sellPointLocation list
+                sellPointLocation.add(latLng);
             });
 
 
@@ -140,10 +140,11 @@ public class editSellPoints extends AppCompatActivity {
 
                 // Create a map of fields to update
                 Map<String, Object> updates = new HashMap<>();
+                LatLng lastLatLng = sellPointLocation.get(sellPointLocation.size() - 1);
                 updates.put("name", updatedName);
                 updates.put("description", updatedDescription);
-                updates.put("latitude", sellPointLocation.get(0).latitude);
-                updates.put("longitude", sellPointLocation.get(0).longitude);
+                updates.put("latitude", lastLatLng.latitude);
+                updates.put("longitude", lastLatLng.longitude);
 
                 // If it's a new SellPoint, add it to the database
                 if (isNewSellPoint) {
@@ -205,6 +206,8 @@ public class editSellPoints extends AppCompatActivity {
                             if (latLng != null) {
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                                 marker.setPosition(latLng);
+                                // Add the new LatLng to the sellPointLocation list
+                                sellPointLocation.add(latLng);
                             }
                         }).addOnFailureListener((exception) -> {
                             if (exception instanceof ApiException) {

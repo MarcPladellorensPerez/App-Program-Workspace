@@ -33,6 +33,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     private final RecyclerView recyclerView;
     public boolean deleteMode = false;
     private final Context context;  // Add this line
+    private static String routeId;
 
 
     public RouteAdapter(List<route> routes, List<String> routeIds, String employeeId, List<String> checkedIds, int layoutId,Context context, RecyclerView recyclerView) {        this.routes = routes;
@@ -40,7 +41,13 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         this.employeeId = employeeId;
         this.userRoutes = checkedIds;
         this.layoutId = layoutId;
-        this.layoutType = (layoutId == R.layout.item) ? 1 : 2;
+        if (this.layoutId == R.layout.item) {
+            this.layoutType = 1;
+        } else if (this.layoutId == R.layout.route) {
+            this.layoutType = 2;
+        } else if (this.layoutId == R.layout.route_main_menu_template) {
+            this.layoutType = 3;
+        }
         this.itemCheckedStatus = new ArrayList<>(Collections.nCopies(routes.size(), false));
         this.context = context;
         this.recyclerView = recyclerView;
@@ -95,16 +102,20 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
                     Log.d("singleton", CheckedItemsSingleton.getInstance().getItemCheckedStatus2().toString());
 
                 });
+            } else if(layoutType ==3){
+                holder.routeName.setText(route.getName());
+                holder.routeDescription.setText(route.getDescription());
+                Log.d("working1","wrk");
+                routeId = routeIds.get(position);
+
             }
         }
     }
 
     @Override
     public int getItemCount() {
-        if (layoutType == 1 || layoutType == 2) {
+        if (layoutType == 1 || layoutType == 2 || layoutType == 3) {
             return routes.size();
-        } else if (layoutType == 3) {
-            return sellPoints.size();
         }
         return 0;
     }
@@ -138,13 +149,33 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
                     public void onClick(View v) {
                         // Get the clicked item
                         route clickedRoute = routes.get(getAdapterPosition());
-
+                        Log.d("routes",routes.toString());
                         // Create an intent to start the EditRoute activity
                         Intent intent = new Intent(v.getContext(), EditRoute.class);
 
                         // Pass the route ID to the EditRoute activity
                         intent.putExtra("routeId", clickedRoute.getId());
 
+                        // Start the activity
+                        v.getContext().startActivity(intent);
+                    }
+                });
+            } else if (layoutType ==3) {
+                routeName = itemView.findViewById(R.id.routeName);
+                routeDescription = itemView.findViewById(R.id.routeDescription);
+                Log.d("working","wrk");
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Get the clicked item
+                        route clickedRoute = routes.get(getAdapterPosition());
+                        // Create an intent to start the EditRoute activity
+                        Intent intent = new Intent(v.getContext(), RouteStartMenu.class);
+
+                        // Pass the route ID to the EditRoute activity
+                        intent.putExtra("routeId", routeId);
+                        Log.d("ASHDSAHKJD",intent.getExtras().toString());
                         // Start the activity
                         v.getContext().startActivity(intent);
                     }
