@@ -136,7 +136,8 @@ public class FirebaseAuthUtilities {
                         completeListener.onComplete(task);
                     } else {
                         // Business login failed
-                        completeListener.onComplete(Tasks.forException(task.getException()));                    }
+                        completeListener.onComplete(Tasks.forException(task.getException()));
+                    }
                 });
     }
 }
