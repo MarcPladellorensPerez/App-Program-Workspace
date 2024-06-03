@@ -8,15 +8,6 @@
     tools:context=".MainMenu">
 
     <TextView
-        android:id="@+id/textView8"
-        android:layout_width="441dp"
-        android:layout_height="96dp"
-        android:background="#0096B1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,8 +25,8 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="136dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="16dp"
         android:text="Drop"
         android:textColor="@android:color/holo_orange_light"
         android:textSize="50sp"
@@ -43,73 +34,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="411dp"
-        android:layout_height="113dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:srcCompat="@drawable/fons_main_menu" />
-
     <Button
         android:id="@+id/EmployeesButton"
         android:layout_width="261dp"
-        android:layout_height="76sp"
-        android:backgroundTint="#545454"
+        android:layout_height="103sp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="56dp"
+        android:backgroundTint="#FEBA33"
         android:text="Employee List"
-        android:textColor="#D7D7D7"
+        android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-        app:layout_constraintEnd_toEndOf="@+id/imageView5"
-        app:layout_constraintHorizontal_bias="0.513"
-        app:layout_constraintStart_toStartOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView5" />
-
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="0dp"
-        android:layout_height="58dp"
-        android:background="#FEDD59"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <Button
         android:id="@+id/sellPointsButton"
-        android:layout_width="268dp"
-        android:layout_height="74dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="263dp"
+        android:layout_height="103dp"
+        android:layout_marginTop="76dp"
+        android:backgroundTint="#FDB933"
         android:text="Sell Points"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/EmployeesButton"
-        app:layout_constraintStart_toStartOf="@+id/EmployeesButton"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
-
-    <Button
-        android:id="@+id/ProductButton"
-        android:layout_width="265dp"
-        android:layout_height="74dp"
-        android:layout_marginTop="28dp"
-        android:text="Product List"
+        android:textColor="#000000"
+        android:textColorLink="#FF9800"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/sellPointsButton"
-        app:layout_constraintStart_toStartOf="@+id/sellPointsButton"
-        app:layout_constraintTop_toBottomOf="@+id/sellPointsButton" />
+        app:layout_constraintEnd_toEndOf="@+id/EmployeesButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/EmployeesButton"
+        app:layout_constraintTop_toBottomOf="@+id/EmployeesButton" />
 
     <Button
         android:id="@+id/RouteButton"
         android:layout_width="264dp"
-        android:layout_height="74dp"
-        android:layout_marginTop="28dp"
+        android:layout_height="103dp"
+        android:layout_marginTop="76dp"
+        android:backgroundTint="#FDB933"
         android:text="Route List"
+        android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/ProductButton"
-        app:layout_constraintStart_toStartOf="@+id/ProductButton"
-        app:layout_constraintTop_toBottomOf="@+id/ProductButton" />
+        app:layout_constraintEnd_toEndOf="@+id/sellPointsButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/sellPointsButton"
+        app:layout_constraintTop_toBottomOf="@+id/sellPointsButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

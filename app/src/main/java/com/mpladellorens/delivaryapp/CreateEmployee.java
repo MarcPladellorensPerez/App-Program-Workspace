@@ -45,7 +45,6 @@ public class CreateEmployee extends AppCompatActivity {
         phoneEditText = findViewById(R.id.PhoneEditText);
         passwordEditText = findViewById(R.id.PasswordEditText);
         confirmPasswordEditText = findViewById(R.id.ConfirmPasswordEditText);
-        admin = findViewById(R.id.checkBox);
         Button createEmployeeButton = findViewById(R.id.Save);
 
         createEmployeeButton.setOnClickListener(new View.OnClickListener() {

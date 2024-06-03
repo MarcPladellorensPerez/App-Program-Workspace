@@ -8,12 +8,13 @@
 
     <TextView
         android:id="@+id/RouteName"
-        android:layout_width="133dp"
-        android:layout_height="24dp"
+        android:layout_width="131dp"
+        android:layout_height="33dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +26,7 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/RouteName" />
 

@@ -6,25 +6,16 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/Name"
+        android:id="@+id/surname"
         android:layout_width="102dp"
         android:layout_height="31dp"
-        android:layout_marginStart="16dp"
-        android:text="Name"
-        android:textColor="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/Email"
-        android:layout_width="193dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="12dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Name" />
+        app:layout_constraintBottom_toBottomOf="@+id/Name"
+        app:layout_constraintStart_toEndOf="@+id/Name"
+        app:layout_constraintTop_toTopOf="@+id/Name"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/Telephone"
@@ -34,28 +25,38 @@
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/surname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.085"
+        app:layout_constraintHorizontal_bias="0.164"
         app:layout_constraintStart_toEndOf="@+id/surname"
         app:layout_constraintTop_toTopOf="@+id/surname"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/surname"
-        android:layout_width="102dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="16dp"
+        android:id="@+id/Email"
+        android:layout_width="193dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/Name"
-        app:layout_constraintStart_toEndOf="@+id/Name"
-        app:layout_constraintTop_toTopOf="@+id/Name"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Name" />
+
+    <TextView
+        android:id="@+id/Name"
+        android:layout_width="102dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="32dp"
+        android:text="Name"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
         android:id="@+id/checkBox2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="108dp"
+        android:layout_marginStart="112dp"
         android:shadowColor="#FFFFFF"
         android:textColor="#FFFFFF"
         android:textColorHighlight="#FFFFFF"
@@ -64,6 +65,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/surname"
         app:layout_constraintTop_toTopOf="@+id/Telephone"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.063" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
