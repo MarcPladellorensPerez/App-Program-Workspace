@@ -8,8 +8,8 @@
 
     <TextView
         android:id="@+id/RouteName"
-        android:layout_width="131dp"
-        android:layout_height="33dp"
+        android:layout_width="191dp"
+        android:layout_height="28dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
@@ -32,10 +32,10 @@
 
     <CheckBox
         android:id="@+id/checkBox4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="184dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="108dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toEndOf="@+id/RouteName"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

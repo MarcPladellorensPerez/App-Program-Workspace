@@ -31,7 +31,6 @@ public class RouteList extends AppCompatActivity {
     Button deleteRoutes;
     Button ConfirmDeleteRoutes;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,7 @@ public class RouteList extends AppCompatActivity {
         deleteRoutes = findViewById(R.id.deleteRoutes);
 
         // Initialize the adapter with an empty list at the beginning
-        routeAdapter = new RouteAdapter(new ArrayList<>(), new ArrayList<>(), "string", new ArrayList<>(), R.layout.route,RouteList.this, recyclerView);
+        routeAdapter = new RouteAdapter(new ArrayList<>(), new ArrayList<>(), "string", new ArrayList<>(), R.layout.route, RouteList.this, recyclerView);
         recyclerView.setAdapter(routeAdapter);
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_name), Context.MODE_PRIVATE);
@@ -56,19 +55,20 @@ public class RouteList extends AppCompatActivity {
             Log.d("RoutesList", "userId: " + id);
         }
 
-
         firebaseFetchUtils fetchUtils = new firebaseFetchUtils();
-        //agafem larray de ids de dins de la business  que necesitem dins de lusuari registrat
         Log.d("RoutesList23", "userId: " + id);
 
-        fetchUtils.fetchBusinessdData(id,"routes", new firebaseFetchUtils.FetchDataBusinessCallback() {
+        fetchUtils.fetchBusinessdData(id, "routes", new firebaseFetchUtils.FetchDataBusinessCallback() {
             @Override
             public void onCallback(List<String> routeIds) {
-                fetchUtils.fetchFieldData(routeIds, "Routes", route.class, new firebaseFetchUtils.FetchDataFieldCallback<route>() {
+                if (routeIds == null || routeIds.isEmpty()) {
+                    Log.d("RoutesList", "No routes found for the user.");
+                    return;
+                }
 
+                fetchUtils.fetchFieldData(routeIds, "Routes", route.class, new firebaseFetchUtils.FetchDataFieldCallback<route>() {
                     @Override
                     public void onCallback(List<route> itemList, List<String> itemIdList) {
-
                         CollectionReference routesRef = db.collection("Routes");
 
                         routesRef.whereIn(FieldPath.documentId(), routeIds).get().addOnCompleteListener(task1 -> {
@@ -87,8 +87,8 @@ public class RouteList extends AppCompatActivity {
                                 RecyclerView routeIdsRecyclerView = findViewById(R.id.RouteIds);
                                 routeIdsRecyclerView.setLayoutManager(new LinearLayoutManager(RouteList.this));
 
-                                List<String> checkedIds= new ArrayList<>();
-                                routeAdapter = new RouteAdapter(new ArrayList<>(), routeIds, userLoginId, checkedIds, R.layout.route,RouteList.this, recyclerView);
+                                List<String> checkedIds = new ArrayList<>();
+                                routeAdapter = new RouteAdapter(new ArrayList<>(), routeIds, userLoginId, checkedIds, R.layout.route, RouteList.this, recyclerView);
                                 routeIdsRecyclerView.setAdapter(routeAdapter);
                                 routeAdapter.updateData(routes);
                             }
@@ -100,12 +100,12 @@ public class RouteList extends AppCompatActivity {
 
         // Set OnClickListener for the CreateRouteButton
         findViewById(R.id.CreateRoute).setOnClickListener(v -> {
-            // Launch the CreateRoute activity
             Intent intent = new Intent(RouteList.this, EditRoute.class);
             startActivity(intent);
         });
+
         deleteRoutes.setOnClickListener(v -> {
-            if (routeAdapter.deleteMode){
+            if (routeAdapter.deleteMode) {
                 routeAdapter.exitDeleteMode();
             } else {
                 routeAdapter.enterDeleteMode();
@@ -113,15 +113,12 @@ public class RouteList extends AppCompatActivity {
         });
 
         ConfirmDeleteRoutes.setOnClickListener(v -> {
-
-            // Get the checked status of each item from the singleton
             List<Boolean> checkedItems = CheckedItemsSingleton.getInstance().getItemCheckedStatus2();
             Log.d("AAAA", CheckedItemsSingleton.getInstance().getItemCheckedStatus2().toString());
-            // Get the IDs of the checked items
             List<String> checkedIds = new ArrayList<>();
             for (int i = 0; i < checkedItems.size(); i++) {
-                if (checkedItems.get(i)) {  // If the item is checked
-                    checkedIds.add(routeAdapter.routeIds.get(i));  // Add its ID to the list
+                if (checkedItems.get(i)) {
+                    checkedIds.add(routeAdapter.routeIds.get(i));
                 }
             }
             if (checkedIds.isEmpty()) {
@@ -129,14 +126,11 @@ public class RouteList extends AppCompatActivity {
                 return;
             }
 
-            // Print the IDs of the checked items
             Log.d("CheckedItems", "IDs of checked items: " + checkedIds.toString());
 
-            // Create an instance of deleteUtils
             Context context = this;
             deleteUtils deleteUtilsInstance = new deleteUtils(context);
 
-            // Call the deleteData method
             deleteUtilsInstance.deleteData(checkedIds, "Routes", "routes", false, true, new deleteUtils.DeleteDataCallback() {
                 @Override
                 public void onCallback() {
@@ -147,14 +141,12 @@ public class RouteList extends AppCompatActivity {
                 public void onSuccess(Void aVoid) {
                     Log.d("DeleteData", "Data deletion successful");
 
-                    // After deleting the data, fetch the updated list
                     fetchUtils.fetchBusinessdData(userLoginId, "routes", new firebaseFetchUtils.FetchDataBusinessCallback() {
                         @Override
                         public void onCallback(List<String> routeIds) {
                             fetchUtils.fetchFieldData(routeIds, "Routes", route.class, new firebaseFetchUtils.FetchDataFieldCallback<route>() {
                                 @Override
                                 public void onCallback(List<route> itemList, List<String> itemIdList) {
-                                    // Update the adapter inside the callback function
                                     routeAdapter.updateData(itemList);
                                     routeAdapter.notifyDataSetChanged();
                                 }
@@ -170,25 +162,27 @@ public class RouteList extends AppCompatActivity {
     @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        // After editing or adding an item, when you want to go back to the main menu
         Intent intent = new Intent(this, MainMenu.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // This flag ensures that all the activities on top of the MainActivity are finished.
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Fetch the data again
         firebaseFetchUtils fetchUtils = new firebaseFetchUtils();
-        fetchUtils.fetchBusinessdData(userLoginId,"routes", new firebaseFetchUtils.FetchDataBusinessCallback() {
+        fetchUtils.fetchBusinessdData(userLoginId, "routes", new firebaseFetchUtils.FetchDataBusinessCallback() {
             @Override
             public void onCallback(List<String> routeIds) {
-                fetchUtils.fetchFieldData(routeIds, "Routes", route.class, new firebaseFetchUtils.FetchDataFieldCallback<route>() {
+                if (routeIds == null || routeIds.isEmpty()) {
+                    Log.d("RoutesList", "No routes found for the user.");
+                    return;
+                }
 
+                fetchUtils.fetchFieldData(routeIds, "Routes", route.class, new firebaseFetchUtils.FetchDataFieldCallback<route>() {
                     @Override
                     public void onCallback(List<route> itemList, List<String> itemIdList) {
-                        // Update the adapter inside the callback function
                         routeAdapter.updateRouteIds(itemIdList);
                         routeAdapter.notifyDataSetChanged();
                     }
@@ -196,6 +190,4 @@ public class RouteList extends AppCompatActivity {
             }
         });
     }
-
-
 }

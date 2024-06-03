@@ -105,7 +105,9 @@
         android:layout_height="43dp"
         android:layout_marginStart="80dp"
         android:layout_marginTop="24dp"
+        android:backgroundTint="#FEBA33"
         android:text="Save"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="@+id/recyclerView"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
